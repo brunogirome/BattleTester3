@@ -33,7 +33,25 @@ bool ASpawnnableCharacter::IsMoving()
 
 void ASpawnnableCharacter::SetCharacterDirection(ECharacterDirection characterDirection)
 {
-  FVector2D newDirection;
+  float x, y;
+
+  switch (characterDirection)
+  {
+  case CHARACTER_DIRECTION_UP:
+    x = 0, y = -1;
+    break;
+  case CHARACTER_DIRECTION_DOWN:
+    x = 0, y = 1;
+    break;
+  case CHARACTER_DIRECTION_LEFT:
+    x = -1, 0;
+    break;
+  case CHARACTER_DIRECTION_RIGHT:
+    x = 1, y = 0;
+    break;
+  }
+
+  this->idleDirections = FVector2D(x, y);
 }
 
 ASpawnnableCharacter::ASpawnnableCharacter()
