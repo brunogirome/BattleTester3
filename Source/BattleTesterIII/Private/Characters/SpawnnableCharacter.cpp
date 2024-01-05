@@ -1,10 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SpawnnableCharacter.h"
+#include "Characters/SpawnnableCharacter.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+#include "Enums/CharacterDirection.h"
 
 #include "PaperFlipbookComponent.h"
 
@@ -27,6 +29,11 @@ FVector2D ASpawnnableCharacter::Get2DRotation()
 bool ASpawnnableCharacter::IsMoving()
 {
   return this->GetCharacterMovement()->Velocity.Length() > 0.f;
+}
+
+void ASpawnnableCharacter::SetCharacterDirection(ECharacterDirection characterDirection)
+{
+  FVector2D newDirection;
 }
 
 ASpawnnableCharacter::ASpawnnableCharacter()

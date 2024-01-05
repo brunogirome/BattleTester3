@@ -8,6 +8,8 @@
 
 #include "SpawnnableCharacter.generated.h"
 
+enum ECharacterDirection;
+
 /**
  *
  */
@@ -24,6 +26,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsMoving();
+
+	UFUNCTION(BlueprintCallable)
+	void SetCharacterDirection(ECharacterDirection characterDirection);
 
 	ASpawnnableCharacter();
 };

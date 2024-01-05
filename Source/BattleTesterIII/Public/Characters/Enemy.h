@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "SpawnnableCharacter.h"
-#include "CombatCharacter.generated.h"
+#include "Enemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
+class BATTLETESTERIII_API AEnemy : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
 	
