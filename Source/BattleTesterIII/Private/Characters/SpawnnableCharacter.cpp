@@ -44,7 +44,7 @@ void ASpawnnableCharacter::SetCharacterDirection(ECharacterDirection characterDi
     x = 0, y = 1;
     break;
   case CHARACTER_DIRECTION_LEFT:
-    x = -1, 0;
+    x = -1, y = 0;
     break;
   case CHARACTER_DIRECTION_RIGHT:
     x = 1, y = 0;
