@@ -1,7 +1,3 @@
-#include "CoreMinimal.h"
-
-#include "CharacterDirection.generated.h"
-
 UENUM(BlueprintType)
 enum ECharacterDirection
 {
