@@ -7,6 +7,8 @@
 
 #include "MyGameMode.generated.h"
 
+class UBattleManager;
+
 enum EBattleState;
 
 enum EWorldState;
@@ -17,18 +19,22 @@ enum EWorldState;
 UCLASS(BlueprintType)
 class BATTLETESTERIII_API AMyGameMode : public AGameModeBase
 {
+	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintType, BlueprintReadWrite)
 	TEnumAsByte<EWorldState> WorldState;
 
-	UPROPERTY(BlueprintType, BlueprintReadWrite)
-	TEnumAsByte<EBattleState> BattleState;
+	UPROPERTY(BlueprintReadOnly)
+	UBattleManager *BattleManager;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsInBattle();
 
-	GENERATED_BODY()
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TEnumAsByte<EBattleState> GetBattleState();
+
+	virtual void BeginPlay() override;
 
 	AMyGameMode();
 };

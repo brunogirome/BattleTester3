@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SpawnnableCharacter.h"
+#include "Characters/CombatCharacter.h"
 #include "Enemy.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class BATTLETESTERIII_API AEnemy : public ASpawnnableCharacter
+class BATTLETESTERIII_API AEnemy : public ACombatCharacter
 {
 	GENERATED_BODY()
-	
 };

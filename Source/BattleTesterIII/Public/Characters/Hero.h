@@ -14,4 +14,6 @@ class BATTLETESTERIII_API AHero : public ACombatCharacter
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void BeginPlay() override;
 };

@@ -13,4 +13,22 @@ UCLASS()
 class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	int32 Hp;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentHp;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 Speed;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsDead();
+
+	UFUNCTION(BlueprintCallable)
+	void TakeDamage(int32 amount);
+
+	ACombatCharacter();
 };
