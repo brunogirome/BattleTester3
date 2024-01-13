@@ -46,6 +46,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Start(TArray<AHero *> heroes, TArray<AEnemy *> enemies, AMyGameMode *gameMode);
 
+	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<EBattleState> BattleState;
 
 	UBattleManager();

@@ -65,5 +65,5 @@ bool UBattleManager::isVictory()
 
 UBattleManager::UBattleManager()
 {
-    this->BattleState = BATTLE_STATE_GET_NEXT_PLAYER;
+    this->BattleState = BATTLE_STATE_POSITIONING;
 }
