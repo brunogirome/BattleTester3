@@ -8,7 +8,7 @@
 
 #include "SpawnnableCharacter.generated.h"
 
-enum ECharacterDirection;
+enum ECharacterDirection : uint8;
 
 /**
  *

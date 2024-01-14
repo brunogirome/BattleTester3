@@ -15,16 +15,20 @@ class AHero;
 
 class AEnemy;
 
-enum EBattleState;
+class UPartyManager;
+
+class USpringArmComponent;
+
+enum EBattleState : uint8;
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class BATTLETESTERIII_API UBattleManager : public UObject
 {
 	GENERATED_BODY()
 
-	TArray<AHero *> heroesRefs;
+	TArray<AHero *> *heroesRefs;
 
 	TArray<ACombatCharacter *> characterRefs;
 
@@ -32,7 +36,15 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	ACombatCharacter *targetCharacter;
 
+	UPartyManager *partyManager;
+
 	UWorld *worldRef;
+
+	USpringArmComponent *springArmRef;
+
+	uint8 enemySelectionIndex;
+
+	uint8 aliveEnemies();
 
 	void sortTurn();
 
@@ -42,7 +54,15 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Start(TArray<AHero *> heroes, TArray<AEnemy *> enemies, AMyGameMode *gameMode);
+	void Start(TArray<AEnemy *> enemies);
+
+	UFUNCTION(BlueprintCallable)
+	void SelectNextEnemyTarget(bool firstTarget);
+
+	UFUNCTION(BlueprintCallable)
+	void SingleTargetSelection(ACombatCharacter *target);
+
+	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode);
 
 	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<EBattleState> BattleState;

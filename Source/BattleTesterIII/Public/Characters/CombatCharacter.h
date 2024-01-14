@@ -6,6 +6,10 @@
 #include "SpawnnableCharacter.h"
 #include "CombatCharacter.generated.h"
 
+class USpringArmComponent;
+
+class UPaperFlipbookComponent;
+
 /**
  *
  */
@@ -24,11 +28,17 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 Speed;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPaperFlipbookComponent *DisplayTarget;
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsDead();
 
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(int32 amount);
+	void ReciveDamage(int32 amount);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
 
 	ACombatCharacter();
 };

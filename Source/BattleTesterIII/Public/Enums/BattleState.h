@@ -1,5 +1,5 @@
 UENUM(BlueprintType)
-enum EBattleState
+enum EBattleState : uint8
 {
     BATTLE_STATE_POSITIONING,
     BATTLE_STATE_GET_NEXT_PLAYER,

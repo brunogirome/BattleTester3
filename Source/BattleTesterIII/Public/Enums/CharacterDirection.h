@@ -1,5 +1,5 @@
 UENUM(BlueprintType)
-enum ECharacterDirection
+enum ECharacterDirection : uint8
 {
     CHARACTER_DIRECTION_UP,
     CHARACTER_DIRECTION_DOWN,

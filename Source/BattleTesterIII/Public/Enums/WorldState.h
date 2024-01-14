@@ -1,5 +1,5 @@
 UENUM(BlueprintType)
-enum EWorldState
+enum EWorldState : uint8
 {
     WORLD_STATE_OVERWORLD,
     WORLD_STATE_BATTLE,

@@ -7,11 +7,13 @@
 
 #include "MyGameMode.generated.h"
 
+class UMyGameInstance;
+
 class UBattleManager;
 
-enum EBattleState;
+enum EBattleState : uint8;
 
-enum EWorldState;
+enum EWorldState : uint8;
 
 /**
  *
@@ -20,6 +22,8 @@ UCLASS(BlueprintType)
 class BATTLETESTERIII_API AMyGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+	UMyGameInstance *gameInstance;
 
 public:
 	UPROPERTY(BlueprintType, BlueprintReadWrite)
