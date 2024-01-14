@@ -26,8 +26,6 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	TArray<AHero *> heroesRefs;
 
-	TArray<AEnemy *> enemiesRefs;
-
 	TArray<ACombatCharacter *> characterRefs;
 
 	ACombatCharacter *turnCharacter;
@@ -48,6 +46,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TEnumAsByte<EBattleState> BattleState;
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AEnemy *> EnemiesRefs;
 
 	UBattleManager();
 };

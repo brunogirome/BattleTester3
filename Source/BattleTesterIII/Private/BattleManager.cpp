@@ -14,7 +14,7 @@ void UBattleManager::Start(TArray<AHero *> heroes, TArray<AEnemy *> enemies, AMy
 {
     this->heroesRefs = heroes;
 
-    this->enemiesRefs = enemies;
+    this->EnemiesRefs = enemies;
 
     this->worldRef = gameMode->GetWorld();
 
@@ -34,7 +34,7 @@ void UBattleManager::sortTurn()
 
     turnCharacter = characterRefs[0];
 
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, turnCharacter->GetName());
+    // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, turnCharacter->GetName());
 }
 
 bool UBattleManager::isGameOver()
@@ -52,7 +52,7 @@ bool UBattleManager::isGameOver()
 
 bool UBattleManager::isVictory()
 {
-    for (AEnemy *enemy : this->enemiesRefs)
+    for (AEnemy *enemy : this->EnemiesRefs)
     {
         if (!enemy->IsDead())
         {
