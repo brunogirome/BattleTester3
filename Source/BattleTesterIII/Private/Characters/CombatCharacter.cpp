@@ -6,6 +6,8 @@
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
 
+FDetachmentTransformRules defaultAttachRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, true);
+
 bool ACombatCharacter::IsDead()
 {
   return this->CurrentHp <= 0.f;
@@ -27,10 +29,27 @@ void ACombatCharacter::SetAsTarget(USpringArmComponent *springArm, ACombatCharac
 
   if (springArm->GetAttachParent())
   {
-    springArm->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, true));
+    springArm->DetachFromComponent(defaultAttachRules);
   }
 
   springArm->SetWorldLocation(this->GetActorLocation());
+}
+
+void ACombatCharacter::RemoveCursor()
+{
+  this->DisplayTarget->SetVisibility(false);
+}
+
+void ACombatCharacter::SetAsCameraFocus(USpringArmComponent *springArm)
+{
+  if (springArm->GetAttachParent())
+  {
+    springArm->DetachFromComponent(defaultAttachRules);
+  }
+
+  springArm->AttachToComponent(this->GetCapsuleComponent(), FAttachmentTransformRules::KeepWorldTransform);
+
+  springArm->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
 }
 
 ACombatCharacter::ACombatCharacter()

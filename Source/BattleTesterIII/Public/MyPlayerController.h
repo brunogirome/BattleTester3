@@ -35,6 +35,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Overworld")
 	APartyLeader *PartyLeader;
 
+	UFUNCTION(BlueprintCallable, Category = "Overworld")
+	void MovePartyLeader(FVector2D input);
+
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 	UBattleManager *BattleManager;
 
@@ -50,9 +53,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
 	bool IsInBattle();
 
-	UFUNCTION(BlueprintCallable, Category = "Overworld")
-	void MovePartyLeader(FVector2D input);
-
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void AddSelectActionButtonsRef(UButton *buttonAttack, UButton *buttonSpells, UButton *buttonItems, UButton *buttonDefend);
 
@@ -67,6 +67,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Enemy Target")
 	bool IsInSelectEnemyTarget();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Attack")
+	bool IsInSelectAttack();
 
 	virtual void BeginPlay() override;
 

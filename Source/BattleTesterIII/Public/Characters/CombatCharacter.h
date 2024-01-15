@@ -40,5 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
 
+	void RemoveCursor();
+
+	void SetAsCameraFocus(USpringArmComponent *springArm);
+
 	ACombatCharacter();
 };

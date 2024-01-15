@@ -56,11 +56,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Start(TArray<AEnemy *> enemies);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SelectNextEnemyTarget(bool firstTarget, FVector2D input = FVector2D(0.f, 0.f));
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SingleTargetSelection(ACombatCharacter *target);
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	FVector SetAttackLocation();
 
 	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode);
 

@@ -69,6 +69,11 @@ bool AMyPlayerController::IsInSelectEnemyTarget()
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET);
 }
 
+bool AMyPlayerController::IsInSelectAttack()
+{
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK);
+}
+
 void AMyPlayerController::MovePartyLeader(FVector2D input)
 {
   float x = input.X;

@@ -16,6 +16,8 @@
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)
 {
+    this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
+
     this->EnemiesRefs = enemies;
 
     characterRefs.Empty();
@@ -33,12 +35,31 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 
     this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
 
+    this->turnCharacter = (*heroesRefs)[0];
+
     this->worldRef = gameMode->GetWorld();
 }
 
 void UBattleManager::SingleTargetSelection(ACombatCharacter *target)
 {
     target->SetAsTarget(this->springArmRef, turnCharacter);
+}
+
+FVector UBattleManager::SetAttackLocation()
+{
+    FVector targetLocation = this->targetCharacter->GetActorLocation();
+
+    targetLocation.X -= 70;
+
+    targetLocation.Y += 50;
+
+    this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
+
+    this->targetCharacter->RemoveCursor();
+
+    this->turnCharacter->SetAsCameraFocus(this->springArmRef);
+
+    return targetLocation;
 }
 
 void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment)
@@ -135,7 +156,7 @@ bool UBattleManager::isVictory()
 
 UBattleManager::UBattleManager()
 {
-    this->BattleState = BATTLE_STATE_POSITIONING;
+    this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
     this->turnCharacter = nullptr;
 
