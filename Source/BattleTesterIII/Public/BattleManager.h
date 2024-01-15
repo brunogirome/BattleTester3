@@ -57,7 +57,7 @@ public:
 	void Start(TArray<AEnemy *> enemies);
 
 	UFUNCTION(BlueprintCallable)
-	void SelectNextEnemyTarget(bool firstTarget);
+	void SelectNextEnemyTarget(bool firstTarget, FVector2D input = FVector2D(0.f, 0.f));
 
 	UFUNCTION(BlueprintCallable)
 	void SingleTargetSelection(ACombatCharacter *target);

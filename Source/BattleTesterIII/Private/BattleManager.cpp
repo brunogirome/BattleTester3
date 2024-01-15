@@ -41,31 +41,40 @@ void UBattleManager::SingleTargetSelection(ACombatCharacter *target)
     target->SetAsTarget(this->springArmRef, turnCharacter);
 }
 
-void UBattleManager::SelectNextEnemyTarget(bool firstTarget)
+void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment)
 {
-    auto nextIndex = [&]()
+    auto nextIndex = [&](bool firstCheck = false)
     {
-        return (enemySelectionIndex + 1) < this->aliveEnemies() ? enemySelectionIndex++ : 0;
+        int32 incrementAmount = firstCheck ? increment.X : 1;
+
+        int32 newIndex = this->enemySelectionIndex + incrementAmount;
+
+        if (newIndex < 0)
+        {
+            return this->EnemiesRefs.Num() - 1;
+        }
+
+        return newIndex < this->aliveEnemies() ? newIndex : 0;
     };
 
     if (firstTarget)
     {
-        enemySelectionIndex = 0;
+        this->enemySelectionIndex = 0;
     }
     else
     {
-        enemySelectionIndex = nextIndex();
+        this->enemySelectionIndex = nextIndex(true);
     }
 
-    AEnemy *target = this->EnemiesRefs[enemySelectionIndex];
+    AEnemy *target = this->EnemiesRefs[this->enemySelectionIndex];
 
     if (target->IsDead())
     {
-        enemySelectionIndex = nextIndex();
+        this->enemySelectionIndex = nextIndex();
 
-        for (int32 i = enemySelectionIndex; i < this->EnemiesRefs.Num(); i++)
+        for (int32 i = this->enemySelectionIndex; i < this->EnemiesRefs.Num(); i++)
         {
-            target = this->EnemiesRefs[enemySelectionIndex];
+            target = this->EnemiesRefs[this->enemySelectionIndex];
 
             if (!target->IsDead())
             {
@@ -77,6 +86,8 @@ void UBattleManager::SelectNextEnemyTarget(bool firstTarget)
     target->SetAsTarget(this->springArmRef, this->targetCharacter);
 
     this->targetCharacter = target;
+
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET;
 }
 
 void UBattleManager::sortTurn()
