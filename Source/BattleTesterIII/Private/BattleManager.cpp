@@ -26,7 +26,7 @@ void UBattleManager::Start(TArray<AEnemy *> enemies)
 
     characterRefs.Append(enemies);
 
-    sortTurn();
+    // sortTurn();
 }
 
 void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode)
@@ -35,19 +35,19 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 
     this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
 
-    this->turnCharacter = (*heroesRefs)[0];
+    this->TurnCharacter = (*heroesRefs)[0];
 
     this->worldRef = gameMode->GetWorld();
 }
 
 void UBattleManager::SingleTargetSelection(ACombatCharacter *target)
 {
-    target->SetAsTarget(this->springArmRef, turnCharacter);
+    target->SetAsTarget(this->springArmRef, TurnCharacter);
 }
 
 FVector UBattleManager::SetAttackLocation()
 {
-    FVector targetLocation = this->targetCharacter->GetActorLocation();
+    FVector targetLocation = this->TargetCharacter->GetActorLocation();
 
     targetLocation.X -= 70;
 
@@ -55,9 +55,9 @@ FVector UBattleManager::SetAttackLocation()
 
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
-    this->targetCharacter->RemoveCursor();
+    this->TargetCharacter->RemoveCursor();
 
-    this->turnCharacter->SetAsCameraFocus(this->springArmRef);
+    this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     return targetLocation;
 }
@@ -104,9 +104,9 @@ void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment
         }
     }
 
-    target->SetAsTarget(this->springArmRef, this->targetCharacter);
+    target->SetAsTarget(this->springArmRef, this->TargetCharacter);
 
-    this->targetCharacter = target;
+    this->TargetCharacter = target;
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET;
 }
@@ -116,9 +116,9 @@ void UBattleManager::sortTurn()
     characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
                        { return a.Speed > b.Speed; });
 
-    turnCharacter = characterRefs[0];
+    this->TurnCharacter = characterRefs[0];
 
-    // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, turnCharacter->GetName());
+    // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TurnCharacter->GetName());
 }
 
 uint8 UBattleManager::aliveEnemies()
@@ -158,7 +158,7 @@ UBattleManager::UBattleManager()
 {
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
-    this->turnCharacter = nullptr;
+    this->TurnCharacter = nullptr;
 
     this->enemySelectionIndex = 0;
 }

@@ -32,10 +32,6 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	TArray<ACombatCharacter *> characterRefs;
 
-	ACombatCharacter *turnCharacter;
-
-	ACombatCharacter *targetCharacter;
-
 	UPartyManager *partyManager;
 
 	UWorld *worldRef;
@@ -72,6 +68,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<AEnemy *> EnemiesRefs;
+
+	UPROPERTY(BlueprintReadOnly)
+	ACombatCharacter *TargetCharacter;
+
+	UPROPERTY(BlueprintReadOnly)
+	ACombatCharacter *TurnCharacter;
 
 	UBattleManager();
 };
