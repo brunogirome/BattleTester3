@@ -51,12 +51,20 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);
 
+	UPROPERTY(BlueprintReadOnly, Category = "Battle|Select Enemy Target")
+	bool canCancelAttack;
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Enemy Target")
 	bool IsInSelectEnemyTarget();
+
+	UFUNCTION(BlueprintCallable, Category = "Battle|Select Enemy Target")
+	void CancelAttack();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Attack")
 	bool IsInSelectAttack();
 
 public:
 	virtual void BeginPlay() override;
+
+	AMyPlayerController();
 };

@@ -56,6 +56,8 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	bool isVictory();
 
+	void delayedActionSelectionWidgetSettings();
+
 public:
 	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode, TSubclassOf<USelectAction> actionSelectWidgetClass);
 

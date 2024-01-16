@@ -1,613 +1,594 @@
 {
-	"folders": [
-		{
-			"name": "BattleTesterIII",
-			"path": "."
-		},
-		{
-			"name": "UE5",
-			"path": "G:\\EpicGamesLibrary\\UE_5.3"
-		}
-	],
-	"settings": {
-		"typescript.tsc.autoDetect": "off",
-		"npm.autoDetect": "off"
-	},
-	"extensions": {
-		"recommendations": [
-			"ms-vscode.cpptools",
-			"ms-dotnettools.csharp"
-		]
-	},
-	"tasks": {
-		"version": "2.0.0",
-		"tasks": [
-			{
-				"label": "BattleTesterIII Win64 Debug Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Debug Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIII Win64 Debug Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Debug Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 DebugGame Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 DebugGame Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIII Win64 DebugGame Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 DebugGame Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Development Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Development Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIII Win64 Development Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Development Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Test Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Test",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Test Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Test",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIII Win64 Test Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Test Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Test",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Shipping Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Shipping",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Shipping Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Shipping",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIII Win64 Shipping Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIII Win64 Shipping Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIII",
-					"Win64",
-					"Shipping",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Debug Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Debug Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIIIEditor Win64 Debug Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Debug Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Debug",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 DebugGame Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 DebugGame Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIIIEditor Win64 DebugGame Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 DebugGame Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"DebugGame",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Development Build",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Development Rebuild",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Build.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"dependsOn": [
-					"BattleTesterIIIEditor Win64 Development Clean"
-				],
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"label": "BattleTesterIIIEditor Win64 Development Clean",
-				"group": "build",
-				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
-				"args": [
-					"BattleTesterIIIEditor",
-					"Win64",
-					"Development",
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-waitmutex"
-				],
-				"problemMatcher": "$msCompile",
-				"type": "shell",
-				"options": {
-					"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			}
-		]
-	},
-	"launch": {
-		"version": "0.2.0",
-		"configurations": [
-			{
-				"name": "Launch BattleTesterIII (Debug)",
-				"request": "launch",
-				"program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
-				"preLaunchTask": "BattleTesterIII Win64 Debug Build",
-				"args": [
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIII (DebugGame)",
-				"request": "launch",
-				"program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
-				"preLaunchTask": "BattleTesterIII Win64 DebugGame Build",
-				"args": [
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIII (Development)",
-				"request": "launch",
-				"program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame.exe",
-				"preLaunchTask": "BattleTesterIII Win64 Development Build",
-				"args": [
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIII (Test)",
-				"request": "launch",
-				"program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
-				"preLaunchTask": "BattleTesterIII Win64 Test Build",
-				"args": [
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIII (Shipping)",
-				"request": "launch",
-				"program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
-				"preLaunchTask": "BattleTesterIII Win64 Shipping Build",
-				"args": [
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIIIEditor (Debug)",
-				"request": "launch",
-				"program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
-				"preLaunchTask": "BattleTesterIIIEditor Win64 Debug Build",
-				"args": [
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIIIEditor (DebugGame)",
-				"request": "launch",
-				"program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
-				"preLaunchTask": "BattleTesterIIIEditor Win64 DebugGame Build",
-				"args": [
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Launch BattleTesterIIIEditor (Development)",
-				"request": "launch",
-				"program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
-				"preLaunchTask": "BattleTesterIIIEditor Win64 Development Build",
-				"args": [
-					"G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
-				],
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3",
-				"stopAtEntry": false,
-				"console": "externalTerminal",
-				"type": "cppvsdbg",
-				"visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
-				"sourceFileMap": {
-					"D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
-				}
-			},
-			{
-				"name": "Generate Project Files",
-				"type": "coreclr",
-				"request": "launch",
-				"preLaunchTask": "UnrealBuildTool Win64 Development Build",
-				"program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Build\\BatchFiles\\RunUBT.bat",
-				"args": [
-					"-projectfiles",
-					"-vscode",
-					"-project=G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
-					"-game",
-					"-engine",
-					"-dotnet"
-				],
-				"console": "externalTerminal",
-				"stopAtEntry": false,
-				"cwd": "G:\\EpicGamesLibrary\\UE_5.3"
-			}
-		]
-	}
+  "folders": [
+    {
+      "name": "BattleTesterIII",
+      "path": "."
+    },
+    {
+      "name": "UE5",
+      "path": "G:\\EpicGamesLibrary\\UE_5.3"
+    }
+  ],
+  "settings": {
+    "typescript.tsc.autoDetect": "off",
+    "npm.autoDetect": "off",
+    "files.associations": {
+      "source_location": "cpp",
+      "xutility": "cpp",
+      "*.ipp": "cpp"
+    }
+  },
+  "extensions": {
+    "recommendations": ["ms-vscode.cpptools", "ms-dotnettools.csharp"]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "BattleTesterIII Win64 Debug Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Debug Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIII Win64 Debug Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Debug Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 DebugGame Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 DebugGame Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIII Win64 DebugGame Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 DebugGame Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Development Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Development Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIII Win64 Development Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Development Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Test Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Test",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Test Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Test",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIII Win64 Test Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Test Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Test",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Shipping Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Shipping",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Shipping Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Shipping",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIII Win64 Shipping Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIII Win64 Shipping Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIII",
+          "Win64",
+          "Shipping",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Debug Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Debug Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIIIEditor Win64 Debug Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Debug Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Debug",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 DebugGame Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 DebugGame Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIIIEditor Win64 DebugGame Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 DebugGame Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "DebugGame",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Development Build",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Development Rebuild",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Build.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "dependsOn": ["BattleTesterIIIEditor Win64 Development Clean"],
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "label": "BattleTesterIIIEditor Win64 Development Clean",
+        "group": "build",
+        "command": "Engine\\Build\\BatchFiles\\Clean.bat",
+        "args": [
+          "BattleTesterIIIEditor",
+          "Win64",
+          "Development",
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-waitmutex"
+        ],
+        "problemMatcher": "$msCompile",
+        "type": "shell",
+        "options": {
+          "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch BattleTesterIII (Debug)",
+        "request": "launch",
+        "program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
+        "preLaunchTask": "BattleTesterIII Win64 Debug Build",
+        "args": [],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIII (DebugGame)",
+        "request": "launch",
+        "program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
+        "preLaunchTask": "BattleTesterIII Win64 DebugGame Build",
+        "args": [],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIII (Development)",
+        "request": "launch",
+        "program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame.exe",
+        "preLaunchTask": "BattleTesterIII Win64 Development Build",
+        "args": [],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIII (Test)",
+        "request": "launch",
+        "program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
+        "preLaunchTask": "BattleTesterIII Win64 Test Build",
+        "args": [],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIII (Shipping)",
+        "request": "launch",
+        "program": "G:\\Unreal Projects\\BattleTesterIII\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
+        "preLaunchTask": "BattleTesterIII Win64 Shipping Build",
+        "args": [],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIIIEditor (Debug)",
+        "request": "launch",
+        "program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
+        "preLaunchTask": "BattleTesterIIIEditor Win64 Debug Build",
+        "args": [
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
+        ],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIIIEditor (DebugGame)",
+        "request": "launch",
+        "program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
+        "preLaunchTask": "BattleTesterIIIEditor Win64 DebugGame Build",
+        "args": [
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
+        ],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Launch BattleTesterIIIEditor (Development)",
+        "request": "launch",
+        "program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+        "preLaunchTask": "BattleTesterIIIEditor Win64 Development Build",
+        "args": [
+          "G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject"
+        ],
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3",
+        "stopAtEntry": false,
+        "console": "externalTerminal",
+        "type": "cppvsdbg",
+        "visualizerFile": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+        "sourceFileMap": {
+          "D:\\build\\++UE5\\Sync": "G:\\EpicGamesLibrary\\UE_5.3"
+        }
+      },
+      {
+        "name": "Generate Project Files",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "UnrealBuildTool Win64 Development Build",
+        "program": "G:\\EpicGamesLibrary\\UE_5.3\\Engine\\Build\\BatchFiles\\RunUBT.bat",
+        "args": [
+          "-projectfiles",
+          "-vscode",
+          "-project=G:\\Unreal Projects\\BattleTesterIII\\BattleTesterIII.uproject",
+          "-game",
+          "-engine",
+          "-dotnet"
+        ],
+        "console": "externalTerminal",
+        "stopAtEntry": false,
+        "cwd": "G:\\EpicGamesLibrary\\UE_5.3"
+      }
+    ]
+  }
 }

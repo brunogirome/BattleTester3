@@ -45,13 +45,26 @@ void UBattleManager::Start(TArray<AEnemy *> enemies)
 
     this->SelectActionWidget = CreateWidget<USelectAction>(this->playerController, WBP_SelectActionClass);
 
+    this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+    this->SelectActionWidget->AddToViewport();
+
     sortTurn();
 }
 
 void UBattleManager::SetPlayerActionState()
 {
-    this->SelectActionWidget->AddToViewport();
+    this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
+    FTimerHandle widgetDelay;
+
+    float DelayInSeconds = 0.01f;
+
+    this->worldRef->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
+}
+
+void UBattleManager::delayedActionSelectionWidgetSettings()
+{
     FVector2D SelectActionLocation;
 
     this->worldRef->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->TurnCharacter->GetActorLocation(), SelectActionLocation, false);
@@ -63,6 +76,10 @@ void UBattleManager::SetPlayerActionState()
     this->SelectActionWidget->SetPositionInViewport(SelectActionLocation, true);
 
     this->SelectActionWidget->IncrementOrDecrementAction();
+
+    this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
+
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(SelectActionLocation.X) + ", " + FString::SanitizeFloat(SelectActionLocation.Y));
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
 }
@@ -104,7 +121,7 @@ void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment
     {
         this->enemySelectionIndex = 0;
 
-        this->SelectActionWidget->RemoveFromParent();
+        this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
     }
     else
     {

@@ -32,7 +32,9 @@ bool AMyPlayerController::IsInBattle()
 
 bool AMyPlayerController::IsInBattleStateActionSelection()
 {
-  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT);
+  bool isActionWidgetValid = this->BattleManager->SelectActionWidget->IsValidLowLevelFast();
+
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT) && isActionWidgetValid;
 }
 
 int32 AMyPlayerController::GetCurrentSelectActionIndex()
@@ -48,6 +50,15 @@ void AMyPlayerController::IncrementOrDecrementActionIndex(FVector2D input)
 bool AMyPlayerController::IsInSelectEnemyTarget()
 {
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET);
+}
+
+void AMyPlayerController::CancelAttack()
+{
+  this->BattleManager->TargetCharacter->RemoveCursor();
+
+  // this->BattleManager->TurnCharacter->SetAsCameraFocus();
+
+  this->BattleManager->SetPlayerActionState();
 }
 
 bool AMyPlayerController::IsInSelectAttack()
@@ -74,7 +85,10 @@ bool AMyPlayerController::checkBattleState(EBattleState state)
 {
   bool rightBattleState = this->BattleManager->BattleState == state;
 
-  bool isActionWidGetValid = this->BattleManager->SelectActionWidget->IsValidLowLevelFast();
+  return rightBattleState && this->IsInBattle();
+}
 
-  return rightBattleState && isActionWidGetValid && this->IsInBattle();
+AMyPlayerController::AMyPlayerController()
+{
+  this->canCancelAttack = true;
 }
