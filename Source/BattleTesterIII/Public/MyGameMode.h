@@ -11,6 +11,8 @@ class UMyGameInstance;
 
 class UBattleManager;
 
+class USelectAction;
+
 enum EBattleState : uint8;
 
 enum EWorldState : uint8;
@@ -24,6 +26,10 @@ class BATTLETESTERIII_API AMyGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 	UMyGameInstance *gameInstance;
+
+protected:
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
+	TSubclassOf<USelectAction> actionSelectWidgetClass;
 
 public:
 	UPROPERTY(BlueprintType, BlueprintReadWrite)

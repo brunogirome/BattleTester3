@@ -3,8 +3,12 @@
 #include "BattleManager.h"
 
 #include "GameFramework/SpringArmComponent.h"
+#include "UObject/ConstructorHelpers.h"
+
+#include "Widgets/SelectAction.h"
 
 #include "MyGameMode.h"
+#include "MyPlayerController.h"
 #include "PartyManager.h"
 
 #include "Characters/CombatCharacter.h"
@@ -14,35 +18,53 @@
 
 #include "Enums/BattleState.h"
 
+void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode, TSubclassOf<USelectAction> actionSelectWidgetClass)
+{
+    this->heroesRefs = &partyManagerRef->PartyMembers;
+
+    this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
+
+    this->worldRef = gameMode->GetWorld();
+
+    this->WBP_SelectActionClass = actionSelectWidgetClass;
+
+    this->playerController = Cast<AMyPlayerController>(this->worldRef->GetFirstPlayerController());
+}
+
 void UBattleManager::Start(TArray<AEnemy *> enemies)
 {
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
     this->EnemiesRefs = enemies;
 
-    characterRefs.Empty();
+    this->characterRefs.Empty();
 
-    characterRefs.Append(*this->heroesRefs);
+    this->characterRefs.Append(*this->heroesRefs);
 
-    characterRefs.Append(enemies);
+    this->characterRefs.Append(enemies);
 
-    // sortTurn();
+    this->SelectActionWidget = CreateWidget<USelectAction>(this->playerController, WBP_SelectActionClass);
+
+    sortTurn();
 }
 
-void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode)
+void UBattleManager::SetPlayerActionState()
 {
-    this->heroesRefs = &partyManagerRef->PartyMembers;
+    this->SelectActionWidget->AddToViewport();
 
-    this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
+    FVector2D SelectActionLocation;
 
-    this->TurnCharacter = (*heroesRefs)[0];
+    this->worldRef->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->TurnCharacter->GetActorLocation(), SelectActionLocation, false);
 
-    this->worldRef = gameMode->GetWorld();
-}
+    SelectActionLocation.X += 60;
 
-void UBattleManager::SingleTargetSelection(ACombatCharacter *target)
-{
-    target->SetAsTarget(this->springArmRef, TurnCharacter);
+    SelectActionLocation.Y -= 45;
+
+    this->SelectActionWidget->SetPositionInViewport(SelectActionLocation, true);
+
+    this->SelectActionWidget->IncrementOrDecrementAction();
+
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
 }
 
 FVector UBattleManager::SetAttackLocation()
@@ -81,6 +103,8 @@ void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment
     if (firstTarget)
     {
         this->enemySelectionIndex = 0;
+
+        this->SelectActionWidget->RemoveFromParent();
     }
     else
     {
@@ -116,7 +140,9 @@ void UBattleManager::sortTurn()
     characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
                        { return a.Speed > b.Speed; });
 
-    this->TurnCharacter = characterRefs[0];
+    this->TurnCharacter = (*this->heroesRefs)[0];
+
+    this->SetPlayerActionState();
 
     // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TurnCharacter->GetName());
 }

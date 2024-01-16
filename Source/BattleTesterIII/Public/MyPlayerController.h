@@ -7,9 +7,7 @@
 
 #include "MyPlayerController.generated.h"
 
-class UUserWidget;
-
-class UButton;
+class USelectAction;
 
 class UBattleManager;
 
@@ -31,7 +29,7 @@ class BATTLETESTERIII_API AMyPlayerController : public APlayerController
 
 	bool checkBattleState(EBattleState state);
 
-public:
+protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Overworld")
 	APartyLeader *PartyLeader;
 
@@ -41,26 +39,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 	UBattleManager *BattleManager;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Battle|Select Action")
-	UUserWidget *SelectActionWidget;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Battle|Select Action")
-	int32 SelectActionIndex;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Battle|Select Action")
-	TArray<UButton *> SelectActionButtons;
-
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
 	bool IsInBattle();
-
-	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
-	void AddSelectActionButtonsRef(UButton *buttonAttack, UButton *buttonSpells, UButton *buttonItems, UButton *buttonDefend);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Action")
 	bool IsInBattleStateActionSelection();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Action")
-	UButton *GetCurrentSelectActionButton();
+	int32 GetCurrentSelectActionIndex();
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);
@@ -71,7 +57,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Attack")
 	bool IsInSelectAttack();
 
+public:
 	virtual void BeginPlay() override;
-
-	AMyPlayerController();
 };

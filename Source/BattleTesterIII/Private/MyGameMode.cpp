@@ -34,7 +34,7 @@ void AMyGameMode::BeginPlay()
 
     this->BattleManager = NewObject<UBattleManager>(UBattleManager::StaticClass());
 
-    this->BattleManager->Initialize(this->gameInstance->PartyManager, this);
+    this->BattleManager->Initialize(this->gameInstance->PartyManager, this, this->actionSelectWidgetClass);
 }
 
 AMyGameMode::AMyGameMode()

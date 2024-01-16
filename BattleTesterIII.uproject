@@ -11,7 +11,10 @@
 			"AdditionalDependencies": [
 				"PaperZD",
 				"Engine",
-				"CoreUObject"
+				"CoreUObject",
+				"Slate",
+				"SlateCore",
+				"UMG"
 			]
 		}
 	],

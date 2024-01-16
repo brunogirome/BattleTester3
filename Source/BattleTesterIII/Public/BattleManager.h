@@ -7,7 +7,11 @@
 
 #include "BattleManager.generated.h"
 
+class USpringArmComponent;
+
 class AMyGameMode;
+
+class AMyPlayerController;
 
 class ACombatCharacter;
 
@@ -17,7 +21,7 @@ class AEnemy;
 
 class UPartyManager;
 
-class USpringArmComponent;
+class USelectAction;
 
 enum EBattleState : uint8;
 /**
@@ -28,11 +32,15 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 {
 	GENERATED_BODY()
 
+	TSubclassOf<USelectAction> WBP_SelectActionClass;
+
 	TArray<AHero *> *heroesRefs;
 
 	TArray<ACombatCharacter *> characterRefs;
 
 	UPartyManager *partyManager;
+
+	AMyPlayerController *playerController;
 
 	UWorld *worldRef;
 
@@ -49,31 +57,34 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 	bool isVictory();
 
 public:
-	UFUNCTION(BlueprintCallable)
+	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode, TSubclassOf<USelectAction> actionSelectWidgetClass);
+
+	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void Start(TArray<AEnemy *> enemies);
+
+	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
+	TEnumAsByte<EBattleState> BattleState;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
+	ACombatCharacter *TargetCharacter;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
+	ACombatCharacter *TurnCharacter;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
+	TArray<AEnemy *> EnemiesRefs;
+
+	UFUNCTION(BlueprintCallable, Category = "State Management|Action State")
+	void SetPlayerActionState();
+
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Action State")
+	USelectAction *SelectActionWidget;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SelectNextEnemyTarget(bool firstTarget, FVector2D input = FVector2D(0.f, 0.f));
 
-	UFUNCTION(BlueprintCallable, Category = "Select Target")
-	void SingleTargetSelection(ACombatCharacter *target);
-
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	FVector SetAttackLocation();
-
-	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode);
-
-	UPROPERTY(BlueprintReadWrite)
-	TEnumAsByte<EBattleState> BattleState;
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<AEnemy *> EnemiesRefs;
-
-	UPROPERTY(BlueprintReadOnly)
-	ACombatCharacter *TargetCharacter;
-
-	UPROPERTY(BlueprintReadOnly)
-	ACombatCharacter *TurnCharacter;
 
 	UBattleManager();
 };

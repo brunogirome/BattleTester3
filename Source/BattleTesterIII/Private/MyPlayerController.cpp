@@ -3,7 +3,8 @@
 #include "MyPlayerController.h"
 
 #include "Blueprint/UserWidget.h"
-#include "Components/Button.h"
+
+#include "Widgets/SelectAction.h"
 
 #include "MyGameMode.h"
 #include "MyGameInstance.h"
@@ -29,39 +30,19 @@ bool AMyPlayerController::IsInBattle()
   return this->gameMode->IsInBattle();
 }
 
-bool AMyPlayerController::checkBattleState(EBattleState state)
-{
-  bool rightBattleState = this->BattleManager->BattleState == state;
-
-  bool isActionWidGetValid = this->SelectActionWidget->IsValidLowLevelFast();
-
-  return rightBattleState && isActionWidGetValid && this->IsInBattle();
-}
-
 bool AMyPlayerController::IsInBattleStateActionSelection()
 {
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT);
 }
 
-UButton *AMyPlayerController::GetCurrentSelectActionButton()
+int32 AMyPlayerController::GetCurrentSelectActionIndex()
 {
-  return this->SelectActionButtons[this->SelectActionIndex];
+  return this->BattleManager->SelectActionWidget->SelectActionIndex;
 }
 
 void AMyPlayerController::IncrementOrDecrementActionIndex(FVector2D input)
 {
-  int32 newIndex = this->SelectActionIndex - input.Y;
-
-  if (newIndex < 0)
-  {
-    newIndex = this->SelectActionButtons.Num() - 1;
-  }
-  else if (newIndex >= this->SelectActionButtons.Num())
-  {
-    newIndex = 0;
-  }
-
-  this->SelectActionIndex = newIndex;
+  this->BattleManager->SelectActionWidget->IncrementOrDecrementAction(input);
 }
 
 bool AMyPlayerController::IsInSelectEnemyTarget()
@@ -89,20 +70,11 @@ void AMyPlayerController::MovePartyLeader(FVector2D input)
   this->PartyLeader->AddMovementInput(directionY, y, false);
 }
 
-void AMyPlayerController::AddSelectActionButtonsRef(UButton *buttonAttack, UButton *buttonSpells, UButton *buttonItems, UButton *buttonDefend)
+bool AMyPlayerController::checkBattleState(EBattleState state)
 {
-  this->SelectActionButtons.Empty();
+  bool rightBattleState = this->BattleManager->BattleState == state;
 
-  this->SelectActionButtons.Add(buttonAttack);
+  bool isActionWidGetValid = this->BattleManager->SelectActionWidget->IsValidLowLevelFast();
 
-  this->SelectActionButtons.Add(buttonSpells);
-
-  this->SelectActionButtons.Add(buttonItems);
-
-  this->SelectActionButtons.Add(buttonDefend);
-}
-
-AMyPlayerController::AMyPlayerController()
-{
-  this->SelectActionIndex = 0;
+  return rightBattleState && isActionWidGetValid && this->IsInBattle();
 }
