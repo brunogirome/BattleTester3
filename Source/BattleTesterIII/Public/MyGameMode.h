@@ -32,14 +32,17 @@ protected:
 	TSubclassOf<USelectAction> actionSelectWidgetClass;
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "World State")
+	bool IsInOverWorld();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "World State")
+	bool IsInBattle();
+
 	UPROPERTY(BlueprintType, BlueprintReadWrite)
 	TEnumAsByte<EWorldState> WorldState;
 
 	UPROPERTY(BlueprintReadOnly)
 	UBattleManager *BattleManager;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool IsInBattle();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TEnumAsByte<EBattleState> GetBattleState();

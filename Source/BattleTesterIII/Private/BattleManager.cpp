@@ -58,7 +58,9 @@ void UBattleManager::SetPlayerActionState()
 
     FTimerHandle widgetDelay;
 
-    float DelayInSeconds = 0.01f;
+    float DelayInSeconds = 0.1f;
+
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "SetPlayerActionState");
 
     this->worldRef->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
 }

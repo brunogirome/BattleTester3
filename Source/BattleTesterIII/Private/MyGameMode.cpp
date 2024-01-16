@@ -10,9 +10,14 @@
 #include "Enums/BattleState.h"
 #include "Enums/WorldState.h"
 
+bool AMyGameMode::IsInOverWorld()
+{
+    return this->WorldState == EWorldState::WORLD_STATE_OVERWORLD;
+}
+
 bool AMyGameMode::IsInBattle()
 {
-    return this->WorldState == WORLD_STATE_BATTLE;
+    return this->WorldState == EWorldState::WORLD_STATE_BATTLE;
 }
 
 TEnumAsByte<EBattleState> AMyGameMode::GetBattleState()
@@ -39,5 +44,5 @@ void AMyGameMode::BeginPlay()
 
 AMyGameMode::AMyGameMode()
 {
-    this->WorldState = WORLD_STATE_OVERWORLD;
+    this->WorldState = EWorldState::WORLD_STATE_OVERWORLD;
 }

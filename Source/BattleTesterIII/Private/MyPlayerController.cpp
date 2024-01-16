@@ -25,6 +25,11 @@ void AMyPlayerController::BeginPlay()
   this->PartyLeader = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyLeader;
 }
 
+bool AMyPlayerController::IsInOverWorld()
+{
+  return this->gameMode->IsInOverWorld();
+}
+
 bool AMyPlayerController::IsInBattle()
 {
   return this->gameMode->IsInBattle();

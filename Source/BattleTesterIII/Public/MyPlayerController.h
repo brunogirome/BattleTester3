@@ -36,6 +36,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Overworld")
 	void MovePartyLeader(FVector2D input);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Overworld")
+	bool IsInOverWorld();
+
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 	UBattleManager *BattleManager;
 
