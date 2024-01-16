@@ -1,3 +1,5 @@
+#pragma once
+
 UENUM(BlueprintType)
 enum EWorldState : uint8
 {

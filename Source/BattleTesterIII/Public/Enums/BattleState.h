@@ -1,3 +1,5 @@
+#pragma once
+
 UENUM(BlueprintType)
 enum EBattleState : uint8
 {
