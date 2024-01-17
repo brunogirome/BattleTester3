@@ -19,7 +19,7 @@ void USpellSelection::MoveSpellCursor(FVector2D input)
 
     float y = input.Y;
 
-    float newIndex;
+    float newIndex = 0;
 
     if (x != 0)
     {

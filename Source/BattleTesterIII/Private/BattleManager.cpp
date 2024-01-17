@@ -65,8 +65,6 @@ void UBattleManager::SetPlayerActionState()
 
     float DelayInSeconds = 0.1f;
 
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "SetPlayerActionState");
-
     this->gameMode->GetWorld()->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
 }
 
@@ -85,8 +83,6 @@ void UBattleManager::delayedActionSelectionWidgetSettings()
     this->SelectActionWidget->IncrementOrDecrementAction();
 
     this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
-
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(SelectActionLocation.X) + ", " + FString::SanitizeFloat(SelectActionLocation.Y));
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
 }
@@ -117,55 +113,72 @@ void UBattleManager::SetPlayerSpellSelection()
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL;
 }
 
-void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment)
+void UBattleManager::SetSelectSingleEnemyTarget()
 {
-    auto nextIndex = [&](bool firstCheck = false)
+    if (this->isVictory())
     {
-        int32 incrementAmount = firstCheck ? increment.X : 1;
+        return;
+    }
 
-        int32 newIndex = this->enemySelectionIndex + incrementAmount;
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET;
 
-        if (newIndex < 0)
+    this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+    this->SelectNextEnemyTarget();
+}
+
+void UBattleManager::SelectNextEnemyTarget(FVector2D increment)
+{
+    if (this->isVictory())
+    {
+        return;
+    }
+
+    int32 vectorIncrementer = increment.X;
+
+    auto incrementIndex = [&](int32 startIndex) -> int32
+    {
+        int32 incrementedIndex = startIndex + vectorIncrementer;
+
+        int32 lastEnemyPartyIndex = this->EnemiesRefs.Num() - 1;
+
+        if (incrementedIndex < 0)
         {
-            return this->EnemiesRefs.Num() - 1;
+            incrementedIndex = lastEnemyPartyIndex;
+        }
+        else if (incrementedIndex > lastEnemyPartyIndex)
+        {
+            incrementedIndex = 0;
         }
 
-        return newIndex < this->aliveEnemies() ? newIndex : 0;
+        return incrementedIndex;
     };
 
-    if (firstTarget)
+    int32 newIndex = incrementIndex(this->enemySelectionIndex);
+
+    int32 initialIndex = newIndex;
+
+    AEnemy *target = this->EnemiesRefs[newIndex];
+
+    while (target->IsDead())
     {
-        this->enemySelectionIndex = 0;
+        vectorIncrementer = increment.X != 0 ? increment.X : 1;
 
-        this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
-    }
-    else
-    {
-        this->enemySelectionIndex = nextIndex(true);
-    }
+        newIndex = incrementIndex(newIndex);
 
-    AEnemy *target = this->EnemiesRefs[this->enemySelectionIndex];
-
-    if (target->IsDead())
-    {
-        this->enemySelectionIndex = nextIndex();
-
-        for (int32 i = this->enemySelectionIndex; i < this->EnemiesRefs.Num(); i++)
+        if (initialIndex == newIndex)
         {
-            target = this->EnemiesRefs[this->enemySelectionIndex];
-
-            if (!target->IsDead())
-            {
-                break;
-            }
+            return;
         }
+
+        target = this->EnemiesRefs[newIndex];
     }
+
+    this->enemySelectionIndex = newIndex;
 
     target->SetAsTarget(this->springArmRef, this->TargetCharacter);
 
     this->TargetCharacter = target;
-
-    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET;
 }
 
 void UBattleManager::sortTurn()

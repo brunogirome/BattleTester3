@@ -76,20 +76,23 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
 	TArray<AEnemy *> EnemiesRefs;
 
-	UPROPERTY(BlueprintReadOnly, Category = "State Management|Action State")
-	USelectAction *SelectActionWidget;
-
-	UFUNCTION(BlueprintCallable, Category = "State Management|Action State")
+	UFUNCTION(BlueprintCallable, Category = "Select Action")
 	void SetPlayerActionState();
 
-	UPROPERTY(BlueprintReadOnly, Category = "State Management|Spell Selection State")
-	USpellSelection *SpellSelectionWidget;
+	UPROPERTY(BlueprintReadOnly, Category = "Select Action|Widgets")
+	USelectAction *SelectActionWidget;
 
-	UFUNCTION(BlueprintCallable, Category = "State Management|Spell Selection State")
+	UFUNCTION(BlueprintCallable, Category = "Spell Selection")
 	void SetPlayerSpellSelection();
 
+	UPROPERTY(BlueprintReadOnly, Category = "Spell Selection|Widgets")
+	USpellSelection *SpellSelectionWidget;
+
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
-	void SelectNextEnemyTarget(bool firstTarget, FVector2D input = FVector2D(0.f, 0.f));
+	void SetSelectSingleEnemyTarget();
+
+	UFUNCTION(BlueprintCallable, Category = "Select Target")
+	void SelectNextEnemyTarget(FVector2D input = FVector2D(0.f, 0.f));
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	FVector SetAttackLocation();
