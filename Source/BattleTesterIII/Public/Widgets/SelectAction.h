@@ -45,4 +45,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IncrementOrDecrementAction(FVector2D input = FVector2D(0.f, 0.f));
+
+	virtual void NativeConstruct() override;
 };

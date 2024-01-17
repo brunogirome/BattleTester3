@@ -23,6 +23,8 @@ class UPartyManager;
 
 class USelectAction;
 
+class USpellSelection;
+
 enum EBattleState : uint8;
 /**
  *
@@ -32,8 +34,6 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 {
 	GENERATED_BODY()
 
-	TSubclassOf<USelectAction> WBP_SelectActionClass;
-
 	TArray<AHero *> *heroesRefs;
 
 	TArray<ACombatCharacter *> characterRefs;
@@ -42,7 +42,7 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	AMyPlayerController *playerController;
 
-	UWorld *worldRef;
+	AMyGameMode *gameMode;
 
 	USpringArmComponent *springArmRef;
 
@@ -59,7 +59,7 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 	void delayedActionSelectionWidgetSettings();
 
 public:
-	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode, TSubclassOf<USelectAction> actionSelectWidgetClass);
+	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef);
 
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void Start(TArray<AEnemy *> enemies);
@@ -76,11 +76,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
 	TArray<AEnemy *> EnemiesRefs;
 
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Action State")
+	USelectAction *SelectActionWidget;
+
 	UFUNCTION(BlueprintCallable, Category = "State Management|Action State")
 	void SetPlayerActionState();
 
-	UPROPERTY(BlueprintReadOnly, Category = "State Management|Action State")
-	USelectAction *SelectActionWidget;
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Spell Selection State")
+	USpellSelection *SpellSelectionWidget;
+
+	UFUNCTION(BlueprintCallable, Category = "State Management|Spell Selection State")
+	void SetPlayerSpellSelection();
 
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SelectNextEnemyTarget(bool firstTarget, FVector2D input = FVector2D(0.f, 0.f));

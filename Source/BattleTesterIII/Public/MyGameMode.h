@@ -13,6 +13,8 @@ class UBattleManager;
 
 class USelectAction;
 
+class USpellSelection;
+
 enum EBattleState : uint8;
 
 enum EWorldState : uint8;
@@ -25,11 +27,16 @@ class BATTLETESTERIII_API AMyGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+	friend class UBattleManager;
+
 	UMyGameInstance *gameInstance;
 
 protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
-	TSubclassOf<USelectAction> actionSelectWidgetClass;
+	TSubclassOf<USelectAction> WBP_SelectActionClass;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
+	TSubclassOf<USpellSelection> WBP_SelectSpellClass;
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "World State")

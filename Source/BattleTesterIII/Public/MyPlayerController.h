@@ -66,6 +66,15 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Attack")
 	bool IsInSelectAttack();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Spell")
+	bool IsInSelectSpell();
+
+	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
+	void CancelSpellSelect();
+
+	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
+	void MoveSpellCursor(FVector2D input);
+
 public:
 	virtual void BeginPlay() override;
 

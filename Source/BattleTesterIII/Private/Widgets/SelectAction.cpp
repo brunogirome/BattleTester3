@@ -6,16 +6,6 @@
 
 void USelectAction::IncrementOrDecrementAction(FVector2D input)
 {
-  this->selectActionButtons.Empty();
-
-  this->selectActionButtons.Add(this->Attack);
-
-  this->selectActionButtons.Add(this->Spells);
-
-  this->selectActionButtons.Add(this->Items);
-
-  this->selectActionButtons.Add(this->Defend);
-
   int32 newIndex = this->SelectActionIndex - input.Y;
 
   if (newIndex < 0)
@@ -41,4 +31,19 @@ void USelectAction::IncrementOrDecrementAction(FVector2D input)
   this->selectActionButtons[newIndex]->SetStyle(newStyle);
 
   this->SelectActionIndex = newIndex;
+}
+
+void USelectAction::NativeConstruct()
+{
+  Super::NativeConstruct();
+
+  this->selectActionButtons.Empty();
+
+  this->selectActionButtons.Add(this->Attack);
+
+  this->selectActionButtons.Add(this->Spells);
+
+  this->selectActionButtons.Add(this->Items);
+
+  this->selectActionButtons.Add(this->Defend);
 }

@@ -5,11 +5,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "UObject/ConstructorHelpers.h"
 
-#include "Widgets/SelectAction.h"
-
 #include "MyGameMode.h"
 #include "MyPlayerController.h"
 #include "PartyManager.h"
+
+#include "Widgets/SelectAction.h"
+#include "Widgets/SpellSelection.h"
 
 #include "Characters/CombatCharacter.h"
 #include "Characters/Hero.h"
@@ -18,17 +19,15 @@
 
 #include "Enums/BattleState.h"
 
-void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameMode, TSubclassOf<USelectAction> actionSelectWidgetClass)
+void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef)
 {
     this->heroesRefs = &partyManagerRef->PartyMembers;
 
     this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
 
-    this->worldRef = gameMode->GetWorld();
+    this->gameMode = gameModeRef;
 
-    this->WBP_SelectActionClass = actionSelectWidgetClass;
-
-    this->playerController = Cast<AMyPlayerController>(this->worldRef->GetFirstPlayerController());
+    this->playerController = Cast<AMyPlayerController>(this->gameMode->GetWorld()->GetFirstPlayerController());
 }
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)
@@ -43,11 +42,17 @@ void UBattleManager::Start(TArray<AEnemy *> enemies)
 
     this->characterRefs.Append(enemies);
 
-    this->SelectActionWidget = CreateWidget<USelectAction>(this->playerController, WBP_SelectActionClass);
+    this->SelectActionWidget = CreateWidget<USelectAction>(this->playerController, this->gameMode->WBP_SelectActionClass);
 
     this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
 
     this->SelectActionWidget->AddToViewport();
+
+    this->SpellSelectionWidget = CreateWidget<USpellSelection>(this->playerController, this->gameMode->WBP_SelectSpellClass);
+
+    this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+    this->SpellSelectionWidget->AddToViewport();
 
     sortTurn();
 }
@@ -62,14 +67,14 @@ void UBattleManager::SetPlayerActionState()
 
     GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "SetPlayerActionState");
 
-    this->worldRef->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
+    this->gameMode->GetWorld()->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
 }
 
 void UBattleManager::delayedActionSelectionWidgetSettings()
 {
     FVector2D SelectActionLocation;
 
-    this->worldRef->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->TurnCharacter->GetActorLocation(), SelectActionLocation, false);
+    this->gameMode->GetWorld()->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->TurnCharacter->GetActorLocation(), SelectActionLocation, false);
 
     SelectActionLocation.X += 60;
 
@@ -101,6 +106,15 @@ FVector UBattleManager::SetAttackLocation()
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     return targetLocation;
+}
+
+void UBattleManager::SetPlayerSpellSelection()
+{
+    this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+    this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Visible);
+
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL;
 }
 
 void UBattleManager::SelectNextEnemyTarget(bool firstTarget, FVector2D increment)

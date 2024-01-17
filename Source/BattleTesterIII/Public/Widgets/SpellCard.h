@@ -7,11 +7,14 @@
 #include "SpellCard.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class BATTLETESTERIII_API USpellCard : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(BlueprintReadWrite)
+	bool IsCardHovered;
 };

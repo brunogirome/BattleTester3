@@ -4,13 +4,15 @@
 
 #include "Blueprint/UserWidget.h"
 
-#include "Widgets/SelectAction.h"
-
 #include "MyGameMode.h"
 #include "MyGameInstance.h"
 #include "PartyManager.h"
 #include "BattleManager.h"
+
 #include "Characters/PartyLeader.h"
+
+#include "Widgets/SelectAction.h"
+#include "Widgets/SpellSelection.h"
 
 #include "Enums/BattleState.h"
 
@@ -61,9 +63,24 @@ void AMyPlayerController::CancelAttack()
 {
   this->BattleManager->TargetCharacter->RemoveCursor();
 
-  // this->BattleManager->TurnCharacter->SetAsCameraFocus();
+  this->BattleManager->SetPlayerActionState();
+}
+
+bool AMyPlayerController::IsInSelectSpell()
+{
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL);
+}
+
+void AMyPlayerController::CancelSpellSelect()
+{
+  this->BattleManager->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
 
   this->BattleManager->SetPlayerActionState();
+}
+
+void AMyPlayerController::MoveSpellCursor(FVector2D input)
+{
+  this->BattleManager->SpellSelectionWidget->MoveSpellCursor(input);
 }
 
 bool AMyPlayerController::IsInSelectAttack()
