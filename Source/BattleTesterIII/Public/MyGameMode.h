@@ -15,6 +15,8 @@ class USelectAction;
 
 class USpellSelection;
 
+class UBattleInventoryList;
+
 enum EBattleState : uint8;
 
 enum EWorldState : uint8;
@@ -37,6 +39,9 @@ protected:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
 	TSubclassOf<USpellSelection> WBP_SelectSpellClass;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
+	TSubclassOf<UBattleInventoryList> WBP_BattleInventoryList;
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "World State")

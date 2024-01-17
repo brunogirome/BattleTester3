@@ -11,6 +11,7 @@
 
 #include "Widgets/SelectAction.h"
 #include "Widgets/SpellSelection.h"
+#include "Widgets/BattleInventoryList.h"
 
 #include "Characters/CombatCharacter.h"
 #include "Characters/Hero.h"
@@ -32,6 +33,20 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)
 {
+    auto setupWidget = [this]<typename WidgetClass>(TSubclassOf<WidgetClass> widgetClass) -> WidgetClass *
+    {
+        WidgetClass *widget = CreateWidget<WidgetClass>(this->playerController, widgetClass);
+
+        if (widget)
+        {
+            widget->SetVisibility(ESlateVisibility::Collapsed);
+
+            widget->AddToViewport();
+        }
+
+        return widget;
+    };
+
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
     this->EnemiesRefs = enemies;
@@ -42,17 +57,11 @@ void UBattleManager::Start(TArray<AEnemy *> enemies)
 
     this->characterRefs.Append(enemies);
 
-    this->SelectActionWidget = CreateWidget<USelectAction>(this->playerController, this->gameMode->WBP_SelectActionClass);
+    this->SelectActionWidget = setupWidget(this->gameMode->WBP_SelectActionClass);
 
-    this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+    this->SpellSelectionWidget = setupWidget(this->gameMode->WBP_SelectSpellClass);
 
-    this->SelectActionWidget->AddToViewport();
-
-    this->SpellSelectionWidget = CreateWidget<USpellSelection>(this->playerController, this->gameMode->WBP_SelectSpellClass);
-
-    this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-    this->SpellSelectionWidget->AddToViewport();
+    this->InventoryListWidget = setupWidget(this->gameMode->WBP_BattleInventoryList);
 
     sortTurn();
 }
@@ -112,6 +121,10 @@ void UBattleManager::SetPlayerSpellSelection()
     this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Visible);
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL;
+}
+
+void UBattleManager::SetPlayerInInventoryList()
+{
 }
 
 void UBattleManager::SetSelectSingleEnemyTarget()

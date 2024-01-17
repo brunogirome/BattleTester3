@@ -27,6 +27,8 @@ class USelectAction;
 
 class USpellSelection;
 
+class UBattleInventoryList;
+
 enum EBattleState : uint8;
 /**
  *
@@ -94,6 +96,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Spell Selection|Widgets")
 	USpellSelection *SpellSelectionWidget;
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory List")
+	void SetPlayerInInventoryList();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Inventory List|Widgets")
+	UBattleInventoryList *InventoryListWidget;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SetSelectSingleEnemyTarget();
