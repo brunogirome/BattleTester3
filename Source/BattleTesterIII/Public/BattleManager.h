@@ -9,6 +9,8 @@
 
 class USpringArmComponent;
 
+class UUserWidget;
+
 class AMyGameMode;
 
 class AMyPlayerController;
@@ -50,6 +52,8 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	uint8 aliveEnemies();
 
+	void setWidgetLocationOnScreen(UUserWidget *widget, float x = 0, float y = 0, ACombatCharacter *targetCharacter = nullptr);
+
 	void sortTurn();
 
 	bool isGameOver();
@@ -66,6 +70,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
 	TEnumAsByte<EBattleState> BattleState;
+
+	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
+	TEnumAsByte<EBattleState> LastBattleState;
 
 	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
 	ACombatCharacter *TargetCharacter;

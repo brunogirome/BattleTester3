@@ -21,14 +21,16 @@ class BATTLETESTERIII_API ASpawnnableCharacter : public APaperZDCharacter
 	FVector2D idleDirections;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
 	FVector2D Get2DRotation();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Animation")
 	bool IsMoving();
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Animation")
 	void SetCharacterDirection(ECharacterDirection characterDirection);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Interface")
+	FVector2D GetLocationOnScreen();
 
 	ASpawnnableCharacter();
 };

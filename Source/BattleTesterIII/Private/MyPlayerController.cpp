@@ -75,7 +75,14 @@ void AMyPlayerController::CancelSpellSelect()
 {
   this->BattleManager->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-  this->BattleManager->SetPlayerActionState();
+  if (this->BattleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+  {
+    this->BattleManager->SetPlayerActionState();
+  }
+  else
+  {
+    this->BattleManager->BattleState = this->BattleManager->LastBattleState;
+  }
 }
 
 void AMyPlayerController::MoveSpellCursor(FVector2D input)

@@ -70,15 +70,7 @@ void UBattleManager::SetPlayerActionState()
 
 void UBattleManager::delayedActionSelectionWidgetSettings()
 {
-    FVector2D SelectActionLocation;
-
-    this->gameMode->GetWorld()->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->TurnCharacter->GetActorLocation(), SelectActionLocation, false);
-
-    SelectActionLocation.X += 60;
-
-    SelectActionLocation.Y -= 45;
-
-    this->SelectActionWidget->SetPositionInViewport(SelectActionLocation, true);
+    this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
 
     this->SelectActionWidget->IncrementOrDecrementAction();
 
@@ -91,9 +83,9 @@ FVector UBattleManager::SetAttackLocation()
 {
     FVector targetLocation = this->TargetCharacter->GetActorLocation();
 
-    targetLocation.X -= 70;
+    targetLocation.X -= 70.f;
 
-    targetLocation.Y += 50;
+    targetLocation.Y += 50.f;
 
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
@@ -106,7 +98,16 @@ FVector UBattleManager::SetAttackLocation()
 
 void UBattleManager::SetPlayerSpellSelection()
 {
-    this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+    if (this->BattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+    {
+        this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    this->LastBattleState = this->BattleState;
+
+    this->setWidgetLocationOnScreen(this->SpellSelectionWidget, 70.f, -240.f);
+
+    this->SpellSelectionWidget->MoveSpellCursor();
 
     this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Visible);
 
@@ -179,6 +180,19 @@ void UBattleManager::SelectNextEnemyTarget(FVector2D increment)
     target->SetAsTarget(this->springArmRef, this->TargetCharacter);
 
     this->TargetCharacter = target;
+}
+
+void UBattleManager::setWidgetLocationOnScreen(UUserWidget *widget, float x, float y, ACombatCharacter *targetCharacter)
+{
+    ACombatCharacter *refCharacter = !targetCharacter ? this->TurnCharacter : targetCharacter;
+
+    FVector2D SelectActionLocation = refCharacter->GetLocationOnScreen();
+
+    SelectActionLocation.X += x;
+
+    SelectActionLocation.Y += y;
+
+    widget->SetPositionInViewport(SelectActionLocation, true);
 }
 
 void UBattleManager::sortTurn()

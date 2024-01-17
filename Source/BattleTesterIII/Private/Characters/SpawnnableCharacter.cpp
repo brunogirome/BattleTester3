@@ -54,6 +54,15 @@ void ASpawnnableCharacter::SetCharacterDirection(ECharacterDirection characterDi
   this->idleDirections = FVector2D(x, y);
 }
 
+FVector2D ASpawnnableCharacter::GetLocationOnScreen()
+{
+  FVector2D LocationOnScreen;
+
+  this->GetWorld()->GetFirstPlayerController()->ProjectWorldLocationToScreen(this->GetActorLocation(), LocationOnScreen, false);
+
+  return LocationOnScreen;
+}
+
 ASpawnnableCharacter::ASpawnnableCharacter()
 {
   this->idleDirections = FVector2D(0.f, 0.f);

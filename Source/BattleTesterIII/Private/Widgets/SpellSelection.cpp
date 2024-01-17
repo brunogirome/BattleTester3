@@ -10,7 +10,7 @@ void USpellSelection::MoveSpellCursor(FVector2D input)
 {
     if (input.Size() == 0)
     {
-        this->spellSlots[0]->IsCardHovered = true;
+        this->spellSlots[this->selectSpellIndex]->IsCardHovered = true;
 
         return;
     }
