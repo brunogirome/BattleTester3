@@ -4,9 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+
 #include "MyGameInstance.generated.h"
 
 class UPartyManager;
+
+class UPaperFlipbook;
+
+class AHero;
 
 /**
  *
@@ -16,11 +21,20 @@ class BATTLETESTERIII_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+	friend class UPartyManager;
+
+protected:
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Party")
+	TMap<FName, TSubclassOf<AHero>> PartyMemberClasses;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Party")
+	TArray<FName> PartyMemberNames;
+
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Party")
 	UPartyManager *PartyManager;
 
-	UMyGameInstance(const FObjectInitializer &ObjectInitializer);
+	virtual void Init() override;
 
 	UMyGameInstance();
 };

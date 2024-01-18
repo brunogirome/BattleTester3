@@ -4,10 +4,9 @@
 
 #include "PartyManager.h"
 
-UMyGameInstance::UMyGameInstance(const FObjectInitializer &ObjectInitializer)
-    : Super(ObjectInitializer)
+void UMyGameInstance::Init()
 {
-  this->PartyManager = ObjectInitializer.CreateDefaultSubobject<UPartyManager>(this, TEXT("PartyManager"));
+  this->PartyManager = NewObject<UPartyManager>(this, UPartyManager::StaticClass());
 }
 
 UMyGameInstance::UMyGameInstance() {}

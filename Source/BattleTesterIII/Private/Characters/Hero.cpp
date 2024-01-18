@@ -5,6 +5,4 @@
 void AHero::BeginPlay()
 {
   Super::BeginPlay();
-
-  this->Speed = 11;
 }

@@ -10,7 +10,9 @@ class AMyGameMode;
 
 class AHero;
 
-class APartyLeader;
+class UMyGameInstance;
+
+class AMyPlayerController;
 
 /**
  *
@@ -20,14 +22,18 @@ class BATTLETESTERIII_API UPartyManager : public UObject
 {
 	GENERATED_BODY()
 
-	UWorld *worldRef;
+	AMyGameMode *gameMode;
+
+	UMyGameInstance *gameInstance;
+
+	AMyPlayerController *playerController;
 
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<AHero *> PartyMembers;
 
 	UPROPERTY(BlueprintReadOnly)
-	APartyLeader *PartyLeader;
+	AHero *PartyLeader;
 
-	void Initialize(APartyLeader *partyLeaderRef, AMyGameMode *gameMode);
+	void Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef);
 };

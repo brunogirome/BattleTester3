@@ -5,7 +5,6 @@
 #include "MyGameInstance.h"
 #include "PartyManager.h"
 #include "BattleManager.h"
-#include "Characters/PartyLeader.h"
 
 #include "Enums/BattleState.h"
 #include "Enums/WorldState.h"
@@ -29,13 +28,11 @@ void AMyGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-    UWorld *world = this->GetWorld();
+    this->gameInstance = Cast<UMyGameInstance>(this->GetWorld()->GetGameInstance());
 
-    this->gameInstance = Cast<UMyGameInstance>(world->GetGameInstance());
+    this->gameInstance->PartyManager->Initialize(this->gameInstance, this);
 
-    APartyLeader *partyLeader = Cast<APartyLeader>(world->GetFirstPlayerController()->GetPawn());
-
-    this->gameInstance->PartyManager->Initialize(partyLeader, this);
+    this->SpawnParty();
 
     this->BattleManager = NewObject<UBattleManager>(UBattleManager::StaticClass());
 

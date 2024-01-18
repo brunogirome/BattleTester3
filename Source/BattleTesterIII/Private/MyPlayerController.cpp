@@ -4,12 +4,15 @@
 
 #include "Blueprint/UserWidget.h"
 
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 #include "MyGameMode.h"
 #include "MyGameInstance.h"
 #include "PartyManager.h"
 #include "BattleManager.h"
 
-#include "Characters/PartyLeader.h"
+#include "Characters/Hero.h"
 
 #include "Widgets/SelectAction.h"
 #include "Widgets/SpellSelection.h"
@@ -23,9 +26,79 @@ void AMyPlayerController::BeginPlay()
 
   this->gameMode = this->GetWorld()->GetAuthGameMode<AMyGameMode>();
 
-  this->BattleManager = gameMode->BattleManager;
+  this->battleManager = this->gameMode->BattleManager;
 
-  this->PartyLeader = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyLeader;
+  this->partyLeader = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyLeader;
+}
+
+void AMyPlayerController::MovePartyLeader(FVector2D input)
+{
+  float x = input.X;
+
+  FVector directionX = FVector(1.f, 0.f, 0.f);
+
+  this->partyLeader->AddMovementInput(directionX, x, false);
+
+  FVector directionY = FVector(0.f, -1.f, 0.f);
+
+  float y = input.Y;
+
+  this->partyLeader->AddMovementInput(directionY, y, false);
+}
+
+int32 AMyPlayerController::GetCurrentSelectActionIndex()
+{
+  return this->battleManager->SelectActionWidget->SelectActionIndex;
+}
+
+void AMyPlayerController::IncrementOrDecrementActionIndex(FVector2D input)
+{
+  this->battleManager->SelectActionWidget->IncrementOrDecrementAction(input);
+}
+
+void AMyPlayerController::CancelAttack()
+{
+  this->battleManager->TargetCharacter->RemoveCursor();
+
+  this->battleManager->SetPlayerActionState();
+}
+
+void AMyPlayerController::CancelSpellSelect()
+{
+  this->battleManager->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+  if (this->battleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+  {
+    this->battleManager->SetPlayerActionState();
+  }
+  else
+  {
+    this->battleManager->BattleState = this->battleManager->LastBattleState;
+  }
+}
+
+void AMyPlayerController::MoveSpellCursor(FVector2D input)
+{
+  this->battleManager->SpellSelectionWidget->MoveSpellCursor(input);
+}
+
+void AMyPlayerController::CancelBattleInventoryList()
+{
+  this->battleManager->InventoryListWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+  if (this->battleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+  {
+    this->battleManager->SetPlayerActionState();
+  }
+  else
+  {
+    this->battleManager->BattleState = this->battleManager->LastBattleState;
+  }
+}
+
+void AMyPlayerController::MoveBattleInventoryCursor(FVector2D input)
+{
+  this->battleManager->InventoryListWidget->MoveCursor(input);
 }
 
 bool AMyPlayerController::IsInOverWorld()
@@ -40,19 +113,9 @@ bool AMyPlayerController::IsInBattle()
 
 bool AMyPlayerController::IsInBattleStateActionSelection()
 {
-  bool isActionWidgetValid = this->BattleManager->SelectActionWidget->IsValidLowLevelFast();
+  bool isActionWidgetValid = this->battleManager->SelectActionWidget->IsValidLowLevelFast();
 
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT) && isActionWidgetValid;
-}
-
-int32 AMyPlayerController::GetCurrentSelectActionIndex()
-{
-  return this->BattleManager->SelectActionWidget->SelectActionIndex;
-}
-
-void AMyPlayerController::IncrementOrDecrementActionIndex(FVector2D input)
-{
-  this->BattleManager->SelectActionWidget->IncrementOrDecrementAction(input);
 }
 
 bool AMyPlayerController::IsInSelectEnemyTarget()
@@ -60,93 +123,39 @@ bool AMyPlayerController::IsInSelectEnemyTarget()
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ENEMY_TARGET);
 }
 
-void AMyPlayerController::CancelAttack()
-{
-  this->BattleManager->TargetCharacter->RemoveCursor();
-
-  this->BattleManager->SetPlayerActionState();
-}
-
-bool AMyPlayerController::IsInSelectSpell()
-{
-  bool isSpellWidgetValid = this->BattleManager->SpellSelectionWidget->IsValidLowLevelFast();
-
-  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL) && isSpellWidgetValid;
-}
-
-void AMyPlayerController::CancelSpellSelect()
-{
-  this->BattleManager->SpellSelectionWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-  if (this->BattleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
-  {
-    this->BattleManager->SetPlayerActionState();
-  }
-  else
-  {
-    this->BattleManager->BattleState = this->BattleManager->LastBattleState;
-  }
-}
-
-void AMyPlayerController::MoveSpellCursor(FVector2D input)
-{
-  this->BattleManager->SpellSelectionWidget->MoveSpellCursor(input);
-}
-
-bool AMyPlayerController::IsInIventoryList()
-{
-  bool isBattleInventoryListValid = this->BattleManager->InventoryListWidget->IsValidLowLevelFast();
-
-  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ITEM) && isBattleInventoryListValid;
-}
-
-void AMyPlayerController::CancelBattleInventoryList()
-{
-  this->BattleManager->InventoryListWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-  if (this->BattleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
-  {
-    this->BattleManager->SetPlayerActionState();
-  }
-  else
-  {
-    this->BattleManager->BattleState = this->BattleManager->LastBattleState;
-  }
-}
-
-void AMyPlayerController::MoveBattleInventoryCursor(FVector2D input)
-{
-  this->BattleManager->InventoryListWidget->MoveCursor(input);
-}
-
 bool AMyPlayerController::IsInSelectAttack()
 {
   return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK);
 }
 
-void AMyPlayerController::MovePartyLeader(FVector2D input)
+bool AMyPlayerController::IsInSelectSpell()
 {
-  float x = input.X;
+  bool isSpellWidgetValid = this->battleManager->SpellSelectionWidget->IsValidLowLevelFast();
 
-  FVector directionX = FVector(1.f, 0.f, 0.f);
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL) && isSpellWidgetValid;
+}
 
-  this->PartyLeader->AddMovementInput(directionX, x, false);
+bool AMyPlayerController::IsInIventoryList()
+{
+  bool isBattleInventoryListValid = this->battleManager->InventoryListWidget->IsValidLowLevelFast();
 
-  FVector directionY = FVector(0.f, -1.f, 0.f);
-
-  float y = input.Y;
-
-  this->PartyLeader->AddMovementInput(directionY, y, false);
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ITEM) && isBattleInventoryListValid;
 }
 
 bool AMyPlayerController::checkBattleState(EBattleState state)
 {
-  bool rightBattleState = this->BattleManager->BattleState == state;
+  bool rightBattleState = this->battleManager->BattleState == state;
 
   return rightBattleState && this->IsInBattle();
 }
 
 AMyPlayerController::AMyPlayerController()
 {
-  this->canCancelAttack = true;
+  this->CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
+
+  this->CameraSpringArm->SetupAttachment(this->RootComponent);
+
+  this->playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+
+  this->playerCamera->SetupAttachment(this->CameraSpringArm, USpringArmComponent::SocketName);
 }

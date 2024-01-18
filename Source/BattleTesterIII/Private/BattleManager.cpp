@@ -15,7 +15,6 @@
 
 #include "Characters/CombatCharacter.h"
 #include "Characters/Hero.h"
-#include "Characters/PartyLeader.h"
 #include "Characters/Enemy.h"
 
 #include "Enums/BattleState.h"
@@ -24,11 +23,11 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 {
     this->heroesRefs = &partyManagerRef->PartyMembers;
 
-    this->springArmRef = partyManagerRef->PartyLeader->SpringArm;
-
     this->gameMode = gameModeRef;
 
     this->playerController = Cast<AMyPlayerController>(this->gameMode->GetWorld()->GetFirstPlayerController());
+
+    this->springArmRef = this->playerController->CameraSpringArm;
 }
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)

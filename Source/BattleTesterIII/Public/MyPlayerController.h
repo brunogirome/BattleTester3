@@ -7,13 +7,15 @@
 
 #include "MyPlayerController.generated.h"
 
-class USelectAction;
+class USpringArmComponent;
+
+class UCameraComponent;
 
 class UBattleManager;
 
 class AMyGameMode;
 
-class APartyLeader;
+class AHero;
 
 enum EBattleState : uint8;
 
@@ -25,67 +27,72 @@ class BATTLETESTERIII_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	AMyGameMode *gameMode;
+public:
+	virtual void BeginPlay() override;
 
-	bool checkBattleState(EBattleState state);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	USpringArmComponent *CameraSpringArm;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Overworld")
-	APartyLeader *PartyLeader;
+	AHero *partyLeader;
 
 	UFUNCTION(BlueprintCallable, Category = "Overworld")
 	void MovePartyLeader(FVector2D input);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Overworld")
-	bool IsInOverWorld();
-
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
-	UBattleManager *BattleManager;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
-	bool IsInBattle();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Action")
-	bool IsInBattleStateActionSelection();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Action")
-	int32 GetCurrentSelectActionIndex();
+	UBattleManager *battleManager;
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Battle|Select Enemy Target")
-	bool canCancelAttack;
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Enemy Target")
-	bool IsInSelectEnemyTarget();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Action")
+	int32 GetCurrentSelectActionIndex();
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Enemy Target")
 	void CancelAttack();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Attack")
-	bool IsInSelectAttack();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Select Spell")
-	bool IsInSelectSpell();
+	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
+	void MoveSpellCursor(FVector2D input);
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
 	void CancelSpellSelect();
 
-	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
-	void MoveSpellCursor(FVector2D input);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Battle Inventory List")
-	bool IsInIventoryList();
+	UFUNCTION(BlueprintCallable, Category = "Battle|Battle Inventory List")
+	void MoveBattleInventoryCursor(FVector2D input);
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Battle Inventory List")
 	void CancelBattleInventoryList();
 
-	UFUNCTION(BlueprintCallable, Category = "Battle|Battle Inventory List")
-	void MoveBattleInventoryCursor(FVector2D input);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Overworld")
+	bool IsInOverWorld();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInBattle();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInBattleStateActionSelection();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInSelectEnemyTarget();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInSelectAttack();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInSelectSpell();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check State|Battle")
+	bool IsInIventoryList();
+
+private:
+	AMyGameMode *gameMode;
+
+	bool checkBattleState(EBattleState state);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent *playerCamera;
 
 public:
-	virtual void BeginPlay() override;
-
 	AMyPlayerController();
 };

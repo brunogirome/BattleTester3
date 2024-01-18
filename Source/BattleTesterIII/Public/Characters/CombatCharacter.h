@@ -15,7 +15,7 @@ enum ECombatStatus : uint8;
 USTRUCT(BlueprintType)
 struct FFakeStatus
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Hp = 0;

@@ -31,9 +31,10 @@ class BATTLETESTERIII_API AMyGameMode : public AGameModeBase
 
 	friend class UBattleManager;
 
+protected:
+	UPROPERTY(BlueprintReadOnly)
 	UMyGameInstance *gameInstance;
 
-protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
 	TSubclassOf<USelectAction> WBP_SelectActionClass;
 
@@ -58,6 +59,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TEnumAsByte<EBattleState> GetBattleState();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SpawnParty();
 
 	virtual void BeginPlay() override;
 

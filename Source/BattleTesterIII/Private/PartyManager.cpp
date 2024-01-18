@@ -2,16 +2,61 @@
 
 #include "PartyManager.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerStart.h"
+
+#include "MyGameInstance.h"
 #include "MyGameMode.h"
+#include "MyPlayerController.h"
 
 #include "Characters/Hero.h"
-#include "Characters/PartyLeader.h"
 
-void UPartyManager::Initialize(APartyLeader *partyLeaderRef, AMyGameMode *gameMode)
+void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef)
 {
-  this->PartyLeader = partyLeaderRef;
+  if (!(gameInstanceRef || gameModeRef))
+  {
+    return;
+  }
 
-  this->PartyMembers.Add(this->PartyLeader);
+  this->gameMode = gameModeRef;
 
-  this->worldRef = gameMode->GetWorld();
+  this->gameInstance = gameInstanceRef;
+
+  this->playerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+  FVector location = FVector(0, 0, 0);
+
+  FRotator rotation = FRotator(0, 0, 0);
+
+  TArray<AActor *> foundPlayerStarts;
+
+  UGameplayStatics::GetAllActorsOfClass(this->gameMode->GetWorld(), APlayerStart::StaticClass(), foundPlayerStarts);
+
+  if (foundPlayerStarts.Num() > 0)
+  {
+    APlayerStart *playerStart = Cast<APlayerStart>(foundPlayerStarts[0]);
+
+    if (playerStart)
+    {
+      location = playerStart->GetActorLocation();
+
+      rotation = playerStart->GetActorRotation();
+    }
+  }
+
+  for (FName heroName : this->gameInstance->PartyMemberNames)
+  {
+    TSubclassOf<AHero> heroClass = this->gameInstance->PartyMemberClasses.FindRef(heroName);
+
+    if (!heroClass)
+    {
+      continue;
+    }
+
+    FActorSpawnParameters spawnParameters;
+
+    spawnParameters.Owner = this->playerController;
+
+    AHero *hero = this->gameMode->GetWorld()->SpawnActor<AHero>(heroClass, location, rotation, spawnParameters);
+  }
 }
