@@ -13,6 +13,7 @@
 
 #include "Widgets/SelectAction.h"
 #include "Widgets/SpellSelection.h"
+#include "Widgets/BattleInventoryList.h"
 
 #include "Enums/BattleState.h"
 
@@ -68,7 +69,9 @@ void AMyPlayerController::CancelAttack()
 
 bool AMyPlayerController::IsInSelectSpell()
 {
-  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL);
+  bool isSpellWidgetValid = this->BattleManager->SpellSelectionWidget->IsValidLowLevelFast();
+
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL) && isSpellWidgetValid;
 }
 
 void AMyPlayerController::CancelSpellSelect()
@@ -88,6 +91,32 @@ void AMyPlayerController::CancelSpellSelect()
 void AMyPlayerController::MoveSpellCursor(FVector2D input)
 {
   this->BattleManager->SpellSelectionWidget->MoveSpellCursor(input);
+}
+
+bool AMyPlayerController::IsInIventoryList()
+{
+  bool isBattleInventoryListValid = this->BattleManager->InventoryListWidget->IsValidLowLevelFast();
+
+  return this->checkBattleState(EBattleState::BATTLE_STATE_PLAYER_SELECT_ITEM) && isBattleInventoryListValid;
+}
+
+void AMyPlayerController::CancelBattleInventoryList()
+{
+  this->BattleManager->InventoryListWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+  if (this->BattleManager->LastBattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+  {
+    this->BattleManager->SetPlayerActionState();
+  }
+  else
+  {
+    this->BattleManager->BattleState = this->BattleManager->LastBattleState;
+  }
+}
+
+void AMyPlayerController::MoveBattleInventoryCursor(FVector2D input)
+{
+  this->BattleManager->InventoryListWidget->MoveCursor(input);
 }
 
 bool AMyPlayerController::IsInSelectAttack()

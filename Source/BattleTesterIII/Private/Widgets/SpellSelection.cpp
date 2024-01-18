@@ -2,8 +2,6 @@
 
 #include "Widgets/SpellSelection.h"
 
-#include "Components/ListView.h"
-
 #include "Widgets/SpellCard.h"
 
 void USpellSelection::MoveSpellCursor(FVector2D input)
@@ -62,19 +60,19 @@ void USpellSelection::NativeConstruct()
 
     this->spellSlots.Empty();
 
-    this->spellSlots.Add(SpellSlot0);
+    this->spellSlots.Add(this->SpellSlot0);
 
-    this->spellSlots.Add(SpellSlot1);
+    this->spellSlots.Add(this->SpellSlot1);
 
-    this->spellSlots.Add(SpellSlot2);
+    this->spellSlots.Add(this->SpellSlot2);
 
-    this->spellSlots.Add(SpellSlot3);
+    this->spellSlots.Add(this->SpellSlot3);
 
-    this->spellSlots.Add(SpellSlot4);
+    this->spellSlots.Add(this->SpellSlot4);
 
-    this->spellSlots.Add(SpellSlot5);
+    this->spellSlots.Add(this->SpellSlot5);
 
-    this->spellSlots.Add(SpellSlot6);
+    this->spellSlots.Add(this->SpellSlot6);
 
-    this->spellSlots.Add(SpellSlot7);
+    this->spellSlots.Add(this->SpellSlot7);
 }

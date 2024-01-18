@@ -33,7 +33,7 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)
 {
-    auto setupWidget = [this]<typename WidgetClass>(TSubclassOf<WidgetClass> widgetClass) -> WidgetClass *
+    auto setupWidget = [&]<typename WidgetClass>(TSubclassOf<WidgetClass> widgetClass) -> WidgetClass *
     {
         WidgetClass *widget = CreateWidget<WidgetClass>(this->playerController, widgetClass);
 
@@ -125,6 +125,20 @@ void UBattleManager::SetPlayerSpellSelection()
 
 void UBattleManager::SetPlayerInInventoryList()
 {
+    if (this->BattleState == EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT)
+    {
+        this->SelectActionWidget->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    this->LastBattleState = this->BattleState;
+
+    this->setWidgetLocationOnScreen(this->InventoryListWidget, 70.f, -75.f);
+
+    this->InventoryListWidget->MoveCursor();
+
+    this->InventoryListWidget->SetVisibility(ESlateVisibility::Visible);
+
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ITEM;
 }
 
 void UBattleManager::SetSelectSingleEnemyTarget()

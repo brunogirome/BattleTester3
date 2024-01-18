@@ -75,6 +75,15 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Spell")
 	void MoveSpellCursor(FVector2D input);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle|Battle Inventory List")
+	bool IsInIventoryList();
+
+	UFUNCTION(BlueprintCallable, Category = "Battle|Battle Inventory List")
+	void CancelBattleInventoryList();
+
+	UFUNCTION(BlueprintCallable, Category = "Battle|Battle Inventory List")
+	void MoveBattleInventoryCursor(FVector2D input);
+
 public:
 	virtual void BeginPlay() override;
 
