@@ -19,8 +19,6 @@
 
 #include "Enums/BattleState.h"
 
-// FDetachmentTransformRules defaultAttachRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, true);
-
 void AMyPlayerController::BeginPlay()
 {
   Super::BeginPlay();
