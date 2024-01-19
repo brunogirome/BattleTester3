@@ -12,6 +12,8 @@ class UPaperFlipbookComponent;
 
 enum ECombatStatus : uint8;
 
+class UCameraComponent;
+
 USTRUCT(BlueprintType)
 struct FFakeStatus
 {
@@ -60,7 +62,13 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
 
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	// UCameraComponent *playerCamera;
+
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	USpringArmComponent *CameraSpringArm;
+
 	UPROPERTY(BlueprintReadOnly)
 	int32 Hp;
 

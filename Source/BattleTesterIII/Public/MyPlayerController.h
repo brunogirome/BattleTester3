@@ -7,13 +7,15 @@
 
 #include "MyPlayerController.generated.h"
 
+class UMyGameInstance;
+
 class USpringArmComponent;
 
-class UCameraComponent;
+class AMyGameMode;
+
+class UPartyManager;
 
 class UBattleManager;
-
-class AMyGameMode;
 
 class AHero;
 
@@ -30,15 +32,15 @@ class BATTLETESTERIII_API AMyPlayerController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	USpringArmComponent *CameraSpringArm;
-
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Overworld")
+	UPROPERTY(BlueprintReadWrite, Category = "Overworld")
 	AHero *partyLeader;
 
 	UFUNCTION(BlueprintCallable, Category = "Overworld")
 	void MovePartyLeader(FVector2D input);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Overworld")
+	UPartyManager *partyManager;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 	UBattleManager *battleManager;
@@ -86,12 +88,13 @@ protected:
 	bool IsInIventoryList();
 
 private:
+	UMyGameInstance *gameInstance;
+
 	AMyGameMode *gameMode;
 
-	bool checkBattleState(EBattleState state);
+	USpringArmComponent *springArmRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent *playerCamera;
+	bool checkBattleState(EBattleState state);
 
 public:
 	AMyPlayerController();

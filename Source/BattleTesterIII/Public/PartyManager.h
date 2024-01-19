@@ -29,11 +29,14 @@ class BATTLETESTERIII_API UPartyManager : public UObject
 	AMyPlayerController *playerController;
 
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	TArray<AHero *> PartyMembers;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	AHero *PartyLeader;
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnParty(FVector startLocation = FVector(0, 0, 0), FRotator startRotation = FRotator(0, 0, 0));
 
 	void Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef);
 };

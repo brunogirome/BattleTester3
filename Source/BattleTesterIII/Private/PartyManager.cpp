@@ -5,44 +5,46 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 #include "MyGameInstance.h"
 #include "MyGameMode.h"
 #include "MyPlayerController.h"
 
 #include "Characters/Hero.h"
 
-void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef)
+void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
 {
-  if (!(gameInstanceRef || gameModeRef))
-  {
-    return;
-  }
-
-  this->gameMode = gameModeRef;
-
-  this->gameInstance = gameInstanceRef;
-
-  this->playerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
-  FVector location = FVector(0, 0, 0);
-
-  FRotator rotation = FRotator(0, 0, 0);
-
   TArray<AActor *> foundPlayerStarts;
 
-  UGameplayStatics::GetAllActorsOfClass(this->gameMode->GetWorld(), APlayerStart::StaticClass(), foundPlayerStarts);
-
-  if (foundPlayerStarts.Num() > 0)
+  if (startLocation.Size() == 0 || startRotation.IsZero())
   {
-    APlayerStart *playerStart = Cast<APlayerStart>(foundPlayerStarts[0]);
+    UGameplayStatics::GetAllActorsOfClass(this->gameMode->GetWorld(), APlayerStart::StaticClass(), foundPlayerStarts);
 
-    if (playerStart)
+    if (foundPlayerStarts.Num() > 0)
     {
-      location = playerStart->GetActorLocation();
+      APlayerStart *playerStart = Cast<APlayerStart>(foundPlayerStarts[0]);
 
-      rotation = playerStart->GetActorRotation();
+      if (playerStart)
+      {
+        startLocation = startLocation.Size() == 0 ? playerStart->GetActorLocation() : startLocation;
+
+        startRotation = startRotation.IsZero() ? playerStart->GetActorRotation() : startRotation;
+      }
     }
   }
+
+  for (AHero *hero : this->PartyMembers)
+  {
+    if (hero)
+    {
+      hero->Destroy();
+    }
+  }
+
+  this->PartyLeader = nullptr;
+
+  this->PartyMembers.Empty();
 
   for (FName heroName : this->gameInstance->PartyMemberNames)
   {
@@ -57,6 +59,29 @@ void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *ga
 
     spawnParameters.Owner = this->playerController;
 
-    AHero *hero = this->gameMode->GetWorld()->SpawnActor<AHero>(heroClass, location, rotation, spawnParameters);
+    AHero *hero = this->gameMode->GetWorld()->SpawnActor<AHero>(heroClass, startLocation, startRotation);
+
+    hero->SpawnDefaultController();
+
+    this->PartyMembers.Add(hero);
+
+    if (this->PartyMembers.Num() == 1)
+    {
+      this->PartyLeader = this->PartyMembers[0];
+    }
   }
+}
+
+void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef)
+{
+  if (!(gameInstanceRef || gameModeRef))
+  {
+    return;
+  }
+
+  this->gameMode = gameModeRef;
+
+  this->gameInstance = gameInstanceRef;
+
+  this->playerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }

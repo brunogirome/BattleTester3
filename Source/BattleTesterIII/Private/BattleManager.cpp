@@ -27,7 +27,7 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
 
     this->playerController = Cast<AMyPlayerController>(this->gameMode->GetWorld()->GetFirstPlayerController());
 
-    this->springArmRef = this->playerController->CameraSpringArm;
+    // this->springArmRef = this->playerController->CameraSpringArm;
 }
 
 void UBattleManager::Start(TArray<AEnemy *> enemies)

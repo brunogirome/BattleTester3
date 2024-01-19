@@ -32,7 +32,7 @@ void AMyGameMode::BeginPlay()
 
     this->gameInstance->PartyManager->Initialize(this->gameInstance, this);
 
-    this->SpawnParty();
+    this->gameInstance->PartyManager->SpawnParty();
 
     this->BattleManager = NewObject<UBattleManager>(UBattleManager::StaticClass());
 

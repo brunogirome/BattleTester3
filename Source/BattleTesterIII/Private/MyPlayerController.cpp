@@ -3,9 +3,7 @@
 #include "MyPlayerController.h"
 
 #include "Blueprint/UserWidget.h"
-
 #include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 
 #include "MyGameMode.h"
 #include "MyGameInstance.h"
@@ -13,12 +11,15 @@
 #include "BattleManager.h"
 
 #include "Characters/Hero.h"
+#include "Characters/CameraPawn.h"
 
 #include "Widgets/SelectAction.h"
 #include "Widgets/SpellSelection.h"
 #include "Widgets/BattleInventoryList.h"
 
 #include "Enums/BattleState.h"
+
+// FDetachmentTransformRules defaultAttachRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, true);
 
 void AMyPlayerController::BeginPlay()
 {
@@ -28,22 +29,32 @@ void AMyPlayerController::BeginPlay()
 
   this->battleManager = this->gameMode->BattleManager;
 
-  this->partyLeader = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyLeader;
+  this->partyManager = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager;
+
+  if (this->partyManager)
+  {
+    this->partyLeader = this->partyManager->PartyLeader;
+  }
+
+  ACameraPawn *cameraPawn = Cast<ACameraPawn>(this->GetPawn());
+
+  if (this->partyLeader && cameraPawn)
+  {
+    this->springArmRef = cameraPawn->CameraSpringArm;
+
+    this->partyLeader->SetAsCameraFocus(this->springArmRef);
+  }
 }
 
 void AMyPlayerController::MovePartyLeader(FVector2D input)
 {
-  float x = input.X;
-
   FVector directionX = FVector(1.f, 0.f, 0.f);
 
-  this->partyLeader->AddMovementInput(directionX, x, false);
+  this->partyLeader->AddMovementInput(directionX, input.X, false);
 
   FVector directionY = FVector(0.f, -1.f, 0.f);
 
-  float y = input.Y;
-
-  this->partyLeader->AddMovementInput(directionY, y, false);
+  this->partyLeader->AddMovementInput(directionY, input.Y, false);
 }
 
 int32 AMyPlayerController::GetCurrentSelectActionIndex()
@@ -151,11 +162,4 @@ bool AMyPlayerController::checkBattleState(EBattleState state)
 
 AMyPlayerController::AMyPlayerController()
 {
-  this->CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
-
-  this->CameraSpringArm->SetupAttachment(this->RootComponent);
-
-  this->playerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-
-  this->playerCamera->SetupAttachment(this->CameraSpringArm, USpringArmComponent::SocketName);
 }
