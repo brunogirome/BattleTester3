@@ -34,18 +34,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
     }
   }
 
-  for (AHero *hero : this->PartyMembers)
-  {
-    if (hero)
-    {
-      hero->Destroy();
-    }
-  }
-
-  this->PartyLeader = nullptr;
-
-  this->PartyMembers.Empty();
-
   for (int32 i = 0; i < this->gameInstance->PartyMemberNames.Num(); i++)
   {
     FName heroName = this->gameInstance->PartyMemberNames[i];
@@ -67,25 +55,20 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
 
     this->PartyMembers.Add(hero);
 
+    if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i])
+    {
+      this->PartyMembers[i]->DoSaveMovimentHistory = true;
+    }
+
     if (this->PartyMembers.Num() == 1)
     {
       this->PartyLeader = this->PartyMembers[0];
 
-      this->PartyLeader->IsPartyLeader = true;
-
-      // this->PartyLeader->IsLeader = true;
+      this->PartyLeader->IsThePartyLeader = true;
     }
     else if (this->PartyMembers[i] && this->PartyMembers[i - 1])
     {
       this->PartyMembers[i]->TargetFollowHero = this->PartyMembers[i - 1];
-      // this->PartyMembers[i]->TargetFollowHero = this->PartyLeader;
-    }
-
-    if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i] && this->PartyMembers[i - 1])
-    {
-      this->PartyMembers[i]->IsLeader = true;
-
-      // this->PartyMembers[i]->TargetFollowHero = this->PartyMembers[i - 1];
     }
   }
 }

@@ -2,8 +2,6 @@
 
 #include "Characters/Hero.h"
 
-#include "AIController.h"
-
 void AHero::BeginPlay()
 {
   Super::BeginPlay();
@@ -13,73 +11,44 @@ void AHero::Tick(float DeltaTime)
 {
   Super::Tick(DeltaTime);
 
-  // if (this->TargetFollowHero)
-  // {
-  //   this->followHero();
-  // }
-
-  if (IsLeader)
+  if (this->DoSaveMovimentHistory)
   {
-    this->UpdateMovementHistory();
+    this->updateMovementHistory();
   }
 
-  if (!IsPartyLeader)
+  if (!this->IsThePartyLeader)
   {
-    this->FollowMovementHistory();
+    this->followMovementHistory();
   }
 }
 
-void AHero::UpdateMovementHistory()
+void AHero::updateMovementHistory()
 {
-  MovementHistory.Insert(GetActorLocation(), 0);
+  this->movementHistory.Insert(GetActorLocation(), 0);
 
-  if (MovementHistory.Num() > HistorySize)
+  if (this->movementHistory.Num() > historySize)
   {
-    MovementHistory.RemoveAt(HistorySize);
+    this->movementHistory.RemoveAt(historySize);
   }
 }
 
-// Método para seguir o histórico de movimentos
-void AHero::FollowMovementHistory()
+void AHero::followMovementHistory()
 {
-  if (!this->TargetFollowHero || TargetFollowHero->MovementHistory.Num() == 0)
+  if (!this->TargetFollowHero || this->TargetFollowHero->movementHistory.Num() == 0)
   {
     return;
   }
 
-  float AcceptanceRadius = 120.f;
+  int historyIndex = FMath::Min(this->FOLLOW_DISTANCE, TargetFollowHero->movementHistory.Num() - 1);
 
-  int FollowDistance = 3;
-
-  // Define qual ponto da história este herói deve seguir
-  int historyIndex = FMath::Min(FollowDistance, TargetFollowHero->MovementHistory.Num() - 1);
-  FVector targetPoint = TargetFollowHero->MovementHistory[historyIndex];
+  FVector targetPoint = TargetFollowHero->movementHistory[historyIndex];
 
   FVector direction = (targetPoint - GetActorLocation()).GetSafeNormal();
+
   float distance = FVector::Dist(targetPoint, GetActorLocation());
 
-  if (distance > AcceptanceRadius) // AcceptanceRadius definido previamente
+  if (distance > this->ACCEPTANCE_RADIUS)
   {
-    // Adicionando movimento na direção do ponto histórico
     AddMovementInput(direction, 1.0f, false);
-  }
-}
-
-void AHero::followHero()
-{
-  if (!this->TargetFollowHero)
-  {
-    return;
-  }
-
-  FVector FollowLocation = TargetFollowHero->GetActorLocation() - (TargetFollowHero->GetActorForwardVector());
-
-  AAIController *AIController = Cast<AAIController>(GetController());
-
-  if (AIController)
-  {
-    float AcceptanceRadius = 35.0f;
-
-    AIController->MoveToLocation(FollowLocation, DISTANCE_TO_KEEP, false);
   }
 }

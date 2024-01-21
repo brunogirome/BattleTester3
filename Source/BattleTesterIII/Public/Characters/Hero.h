@@ -14,24 +14,24 @@ class BATTLETESTERIII_API AHero : public ACombatCharacter
 {
 	GENERATED_BODY()
 
-	void followHero();
+	float const ACCEPTANCE_RADIUS = 120.f;
 
-	float const DISTANCE_TO_KEEP = 100.f;
+	float const FOLLOW_DISTANCE = 3;
 
-	TArray<FVector> MovementHistory;
+	TArray<FVector> movementHistory;
 
-	int HistorySize = 10;
+	int historySize = 10;
 
-	void UpdateMovementHistory();
+	void updateMovementHistory();
 
-	void FollowMovementHistory();
+	void followMovementHistory();
 
 public:
 	AHero *TargetFollowHero;
 
-	bool IsLeader;
+	bool DoSaveMovimentHistory;
 
-	bool IsPartyLeader;
+	bool IsThePartyLeader;
 
 	virtual void Tick(float DeltaTime) override;
 

@@ -35,7 +35,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	AHero *PartyLeader;
 
-	UFUNCTION(BlueprintCallable)
+	void SetupParty();
+
 	void SpawnParty(FVector startLocation = FVector(0, 0, 0), FRotator startRotation = FRotator(0, 0, 0));
 
 	void Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef);
