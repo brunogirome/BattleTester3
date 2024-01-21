@@ -13,4 +13,8 @@ UCLASS()
 class BATTLETESTERIII_API AEnemy : public ACombatCharacter
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Battle")
+	int32 BattleIndex;
 };

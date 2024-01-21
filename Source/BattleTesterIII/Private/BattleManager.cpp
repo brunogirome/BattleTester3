@@ -223,8 +223,8 @@ void UBattleManager::setWidgetLocationOnScreen(UUserWidget *widget, float x, flo
 
 void UBattleManager::sortTurn()
 {
-    characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
-                       { return a.Speed > b.Speed; });
+    // characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
+    //                    { return a.Speed > b.Speed; });
 
     this->TurnCharacter = (*this->heroesRefs)[0];
 

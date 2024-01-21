@@ -62,38 +62,31 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
 
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	// UCameraComponent *playerCamera;
+	FVector battleLocation;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	USpringArmComponent *CameraSpringArm;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 Hp;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 CurrentHp;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 Speed;
-
-	UPROPERTY(BlueprintReadOnly)
-	TMap<TEnumAsByte<ECombatStatus>, int32> CombatStatus;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
 	FFakeStatus FakeStatus = FFakeStatus();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	UPaperFlipbookComponent *DisplayTarget;
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	TMap<TEnumAsByte<ECombatStatus>, int32> CombatStatus;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Status|Getter")
 	bool IsDead();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Status|Setter")
 	void ReciveDamage(int32 amount);
 
-	UFUNCTION(BlueprintCallable)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle Control|Components")
+	USpringArmComponent *CameraSpringArm;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Battle Control|Components")
+	UPaperFlipbookComponent *DisplayTarget;
+
+	UFUNCTION(BlueprintCallable, Category = "Battle Control|Components")
+	void SetBattleSpot(FVector battleSpotLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Battle Control")
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
 
 	void RemoveCursor();

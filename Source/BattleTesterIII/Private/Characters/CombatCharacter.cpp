@@ -39,6 +39,11 @@ void ACombatCharacter::SetAsTarget(USpringArmComponent *springArm, ACombatCharac
   springArm->SetWorldLocation(this->GetActorLocation());
 }
 
+void ACombatCharacter::SetBattleSpot(FVector battleSpotLocation)
+{
+  this->battleLocation = battleSpotLocation;
+}
+
 void ACombatCharacter::RemoveCursor()
 {
   this->DisplayTarget->SetVisibility(false);
@@ -52,7 +57,6 @@ void ACombatCharacter::SetAsCameraFocus(USpringArmComponent *springArm)
   }
 
   springArm->AttachToComponent(this->GetCapsuleComponent(), FAttachmentTransformRules::KeepWorldTransform);
-
   springArm->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
 }
 
@@ -63,25 +67,15 @@ void ACombatCharacter::BeginPlay()
   if (this->FakeStatus.IsValid())
   {
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_HP, this->FakeStatus.Hp);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_HP, this->FakeStatus.Hp);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MANA, this->FakeStatus.Mana);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_MANA, this->FakeStatus.Mana);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE, this->FakeStatus.PhysicalDamage);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE, this->FakeStatus.PhysicalDefense);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DAMAGE, this->FakeStatus.MagicDamage);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DEFENSE, this->FakeStatus.MagicDefense);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_STAMINA, this->FakeStatus.Stamina);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_SPEED, this->FakeStatus.Speed);
-
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_EVASION, this->FakeStatus.Evasion);
   }
 }
@@ -89,18 +83,8 @@ void ACombatCharacter::BeginPlay()
 ACombatCharacter::ACombatCharacter()
 {
   this->DisplayTarget = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("DisplayTarget"));
-
   this->DisplayTarget->SetupAttachment(this->GetCapsuleComponent());
-
   this->DisplayTarget->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
-
   this->DisplayTarget->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
-
   this->DisplayTarget->SetVisibility(false);
-
-  this->CurrentHp = 100.f;
-
-  this->Hp = 100.f;
-
-  this->Speed = 10.f;
 }
