@@ -15,17 +15,16 @@
 #include "AI/BattleAIController.h"
 #include "Characters/Enemy.h"
 #include "Characters/Hero.h"
+#include "Enums/CharacterDirection.h"
 
 #if WITH_EDITOR
 void ABattlefield::PostEditChangeProperty(FPropertyChangedEvent &PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-	// Verifique se a propriedade alterada é uma de suas texturas
 	if (PropertyChangedEvent.Property && (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(ABattlefield, HeroSpotTexture) ||
 										  PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(ABattlefield, EnemySpotTexture)))
 	{
-		// Método para atualizar as texturas dos billboards
 		this->updateBillboardTextures();
 	}
 }
@@ -56,29 +55,29 @@ void ABattlefield::BeginPlay()
 
 	this->partyMembers = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyMembers;
 
-	FVector battleSpotLocation;
-
-	for (int i = 0; i < this->MAX_NUMBER_OF_HEROES && partyMembers.Num(); i++)
+	for (int i = 0; i < this->MAX_NUMBER_OF_HEROES && this->partyMembers.Num(); i++)
 	{
-		AHero *hero = partyMembers[i];
+		AHero *hero = this->partyMembers[i];
 
 		if (hero && this->HeroesPositions[i])
 		{
-			battleSpotLocation = this->HeroesPositions[i]->GetComponentLocation() - this->iconHeightVectorAux;
+			hero->SetBattleSpot(this->HeroesPositions[i]->GetBattleSpot());
 
-			// hero->SetBattleSpot();
+			this->amountOfBattleSpots++;
 		}
 	}
 
 	for (int i = 0; i < this->MAX_NUMBER_OF_ENEMIES && this->Enemies.Num(); i++)
 	{
+		AEnemy *enemy = this->Enemies[i];
+
 		if (this->Enemies[i] && this->EnemiesPositions[i])
 		{
-			// this->Enemies[i]->SetupBattle(EnemiesPositions[i]->GetComponentLocation() - this->iconHeightVectorAux, this);
+			enemy->SetBattleSpot(this->EnemiesPositions[i]->GetBattleSpot());
+
+			this->amountOfBattleSpots++;
 		}
 	}
-
-	this->amountOfBattleSpots = this->HeroesPositions.Num() + this->EnemiesPositions.Num();
 }
 
 void ABattlefield::IncrementSucessBattleSpots()
@@ -112,12 +111,17 @@ void ABattlefield::MoveActorsToBattleLocations()
 
 		ABattleAIController *actorIAController = Cast<ABattleAIController>(actor->GetController());
 
-		// actorIAController->Move
+		actorIAController->MoveToBattleSpot();
 	};
 
 	for (AHero *hero : this->partyMembers)
 	{
-		// BattleAIController hero->
+		executeMoveToActor(hero);
+	}
+
+	for (AEnemy *enemy : this->Enemies)
+	{
+		executeMoveToActor(enemy);
 	}
 }
 
@@ -127,7 +131,7 @@ ABattlefield::ABattlefield()
 	this->RootComponent = this->BattleBoundaries;
 	this->BattleBoundaries->InitBoxExtent(FVector(500.0f, 500.0f, 50.0f));
 
-	auto createLine = [&](USceneComponent *&lineRef, FString lineName, int32 count, TArray<UBattleSpotBillboardComponent *> *billboardsRef, FString spotName) -> void
+	auto createLine = [&](USceneComponent *&lineRef, FString lineName, int32 count, TArray<UBattleSpotBillboardComponent *> *billboardsRef, FString spotName, ECharacterDirection defaultDirection) -> void
 	{
 		lineRef = CreateDefaultSubobject<USceneComponent>(*FString::Printf(TEXT("%s"), *lineName));
 		lineRef->SetupAttachment(this->RootComponent);
@@ -143,13 +147,14 @@ ABattlefield::ABattlefield()
 			{
 				NewBillboard->SetRelativeLocation(NewBillboard->GetRelativeLocation() + this->iconHeightVectorAux);
 				NewBillboard->AttachOwnText();
+				NewBillboard->BattleDirection = defaultDirection;
 
 				(*billboardsRef).Add(NewBillboard);
 			}
 		}
 	};
 
-	createLine(this->HeroLine, TEXT("HeroLine"), this->MAX_NUMBER_OF_HEROES, &this->HeroesPositions, "HeroSpot");
+	createLine(this->HeroLine, TEXT("HeroLine"), this->MAX_NUMBER_OF_HEROES, &this->HeroesPositions, "HeroSpot", ECharacterDirection::CHARACTER_DIRECTION_RIGHT);
 
-	createLine(this->EnemyLine, TEXT("EnemyLine"), this->MAX_NUMBER_OF_ENEMIES, &this->EnemiesPositions, "EnemySpot");
+	createLine(this->EnemyLine, TEXT("EnemyLine"), this->MAX_NUMBER_OF_ENEMIES, &this->EnemiesPositions, "EnemySpot", ECharacterDirection::CHARACTER_DIRECTION_LEFT);
 }

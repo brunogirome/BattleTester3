@@ -62,6 +62,10 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
 
+	friend class ABattleAIController;
+
+	FBattleSpot battleSpot;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
 	FFakeStatus FakeStatus = FFakeStatus();
@@ -86,8 +90,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Battle Control")
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
-
-	FBattleSpot BattleSpot;
 
 	void RemoveCursor();
 

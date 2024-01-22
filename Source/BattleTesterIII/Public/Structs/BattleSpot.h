@@ -12,14 +12,14 @@ struct FBattleSpot
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FVector location;
+	FVector Location;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<ECharacterDirection> direction;
+	TEnumAsByte<ECharacterDirection> Direction;
 
 	FBattleSpot(){};
 
 	FBattleSpot(FVector newLocation, TEnumAsByte<ECharacterDirection> directionWhenReached)
-		: location(newLocation),
-		  direction(directionWhenReached){};
+		: Location(newLocation),
+		  Direction(directionWhenReached){};
 };

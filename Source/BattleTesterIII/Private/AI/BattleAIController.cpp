@@ -4,6 +4,7 @@
 
 #include "AI/NavigationSystemBase.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "BattleManager.h"
 
@@ -34,7 +35,9 @@ void ABattleAIController::MoveToBattleSpot()
     return;
   }
 
-  FVector spotLocation = this->controlledPawn->BattleSpot.location;
+  this->controlledPawn->GetCharacterMovement()->MaxWalkSpeed = this->battleWalkSpeed;
+
+  FVector spotLocation = this->controlledPawn->battleSpot.Location;
   float acceptanceRadius = 0.1f;
   bool stopOnOverlap = false;
 
@@ -58,7 +61,7 @@ void ABattleAIController::OnMoveComplete(FAIRequestID RequestID, const FPathFoll
               return;
             }
 
-            this->controlledPawn->SetCharacterDirection(this->controlledPawn->BattleSpot.direction); 
+            this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction); 
             
 
             if (!this->battleManagerInstance)

@@ -43,7 +43,7 @@ void ACombatCharacter::SetAsTarget(USpringArmComponent *springArm, ACombatCharac
 
 void ACombatCharacter::SetBattleSpot(FBattleSpot newBattleSpot)
 {
-  this->BattleSpot = newBattleSpot;
+  this->battleSpot = newBattleSpot;
 }
 
 void ACombatCharacter::RemoveCursor()

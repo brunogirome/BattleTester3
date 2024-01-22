@@ -29,7 +29,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TEnumAsByte<ECharacterDirection> BattleDirection;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	UTextRenderComponent *IndexTextComponent;
 
 	void AttachOwnText();

@@ -25,6 +25,10 @@ class BATTLETESTERIII_API ABattleAIController : public AAIController
 
 	UBattleManager *battleManagerInstance;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float battleWalkSpeed = 2000.f;
+
 public:
 	void
 	MoveToBattleSpot();
