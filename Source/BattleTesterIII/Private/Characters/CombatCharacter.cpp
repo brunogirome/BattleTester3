@@ -8,6 +8,8 @@
 
 #include "MyGameMode.h"
 
+#include "AI/BattleAIController.h"
+
 #include "Enums/CombatStatus.h"
 
 FDetachmentTransformRules defaultAttachRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepRelative, true);
@@ -39,9 +41,9 @@ void ACombatCharacter::SetAsTarget(USpringArmComponent *springArm, ACombatCharac
   springArm->SetWorldLocation(this->GetActorLocation());
 }
 
-void ACombatCharacter::SetBattleSpot(FVector battleSpotLocation)
+void ACombatCharacter::SetBattleSpot(FBattleSpot newBattleSpot)
 {
-  this->battleLocation = battleSpotLocation;
+  this->BattleSpot = newBattleSpot;
 }
 
 void ACombatCharacter::RemoveCursor()
@@ -87,4 +89,6 @@ ACombatCharacter::ACombatCharacter()
   this->DisplayTarget->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
   this->DisplayTarget->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
   this->DisplayTarget->SetVisibility(false);
+
+  this->AIControllerClass = ABattleAIController::StaticClass();
 }

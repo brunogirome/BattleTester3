@@ -9,9 +9,11 @@
 
 class UBoxComponent;
 class USceneComponent;
-class UBillboardComponent;
+class UBattleSpotBillboardComponent;
 class UTextRenderComponent;
+class UTexture2D;
 
+class AHero;
 class AEnemy;
 
 UCLASS()
@@ -19,15 +21,32 @@ class BATTLETESTERIII_API ABattlefield : public AActor
 {
 	GENERATED_BODY()
 
+	FVector iconHeightVectorAux = FVector(0, 0, this->ICON_HEIGHT);
+
+	int32 amountOfBattleSpots;
+
+	int32 amountOfActorsReachedBattleSpot;
+
+	TArray<AHero *> partyMembers;
+
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Battlefield Textures")
+	UTexture2D *HeroSpotTexture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Battlefield Textures")
+	UTexture2D *EnemySpotTexture;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent &PropertyChangedEvent) override;
+
+	void updateBillboardTextures();
+#endif
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 MAX_NUMBER_OF_HEROES = 4;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 MAX_NUMBER_OF_ENEMIES = 10;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float ICON_HEIGHT = 55.f;
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -43,16 +62,19 @@ public:
 	USceneComponent *EnemyLine;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<UBillboardComponent *> HeroesPositions;
+	TArray<UBattleSpotBillboardComponent *> HeroesPositions;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<UBillboardComponent *> EnemiesPositions;
+	TArray<UBattleSpotBillboardComponent *> EnemiesPositions;
 
-	// UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	// TArray<UTextRenderComponent *> HeroesIndexDisplay;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	bool BattleStarted;
 
-	// UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	// TArray<UTextRenderComponent *> EnemiesIndexs;
+	const static int32 ICON_HEIGHT = 55;
+
+	void MoveActorsToBattleLocations();
+
+	void IncrementSucessBattleSpots();
 
 	virtual void BeginPlay() override;
 

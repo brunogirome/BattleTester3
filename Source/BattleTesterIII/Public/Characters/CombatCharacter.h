@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "SpawnnableCharacter.h"
+
+#include "Structs/BattleSpot.h"
+
 #include "CombatCharacter.generated.h"
 
 class USpringArmComponent;
-
 class UPaperFlipbookComponent;
 
 enum ECombatStatus : uint8;
-
-class UCameraComponent;
 
 USTRUCT(BlueprintType)
 struct FFakeStatus
@@ -62,8 +62,6 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 {
 	GENERATED_BODY()
 
-	FVector battleLocation;
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
 	FFakeStatus FakeStatus = FFakeStatus();
@@ -84,10 +82,12 @@ public:
 	UPaperFlipbookComponent *DisplayTarget;
 
 	UFUNCTION(BlueprintCallable, Category = "Battle Control|Components")
-	void SetBattleSpot(FVector battleSpotLocation);
+	void SetBattleSpot(FBattleSpot newBattleSpot);
 
 	UFUNCTION(BlueprintCallable, Category = "Battle Control")
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
+
+	FBattleSpot BattleSpot;
 
 	void RemoveCursor();
 

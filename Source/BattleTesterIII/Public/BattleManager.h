@@ -8,25 +8,18 @@
 #include "BattleManager.generated.h"
 
 class USpringArmComponent;
-
 class UUserWidget;
-
 class AMyGameMode;
-
 class AMyPlayerController;
 
+class ABattlefield;
 class ACombatCharacter;
-
 class AHero;
-
 class AEnemy;
 
 class UPartyManager;
-
 class USelectAction;
-
 class USpellSelection;
-
 class UBattleInventoryList;
 
 enum EBattleState : uint8;
@@ -68,7 +61,7 @@ public:
 	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef);
 
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
-	void Start(TArray<AEnemy *> enemies);
+	void Start(ABattlefield *currentBattlefield);
 
 	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
 	TEnumAsByte<EBattleState> BattleState;
@@ -84,6 +77,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
 	TArray<AEnemy *> EnemiesRefs;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
+	ABattlefield *BattlefieldInstance;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Action")
 	void SetPlayerActionState();

@@ -13,6 +13,7 @@
 #include "Widgets/SpellSelection.h"
 #include "Widgets/BattleInventoryList.h"
 
+#include "Battle/Battlefield.h"
 #include "Characters/CombatCharacter.h"
 #include "Characters/Hero.h"
 #include "Characters/Enemy.h"
@@ -30,8 +31,21 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
     // this->springArmRef = this->playerController->CameraSpringArm;
 }
 
-void UBattleManager::Start(TArray<AEnemy *> enemies)
+void UBattleManager::Start(ABattlefield *currentBattlefield)
 {
+    if (!currentBattlefield)
+    {
+        return;
+    }
+
+    this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
+    this->BattlefieldInstance = currentBattlefield;
+    this->EnemiesRefs = this->BattlefieldInstance->Enemies;
+
+    this->characterRefs.Empty();
+    this->characterRefs.Append(*this->heroesRefs);
+    this->characterRefs.Append(this->EnemiesRefs);
+
     auto setupWidget = [&]<typename WidgetClass>(TSubclassOf<WidgetClass> widgetClass) -> WidgetClass *
     {
         WidgetClass *widget = CreateWidget<WidgetClass>(this->playerController, widgetClass);
@@ -39,27 +53,14 @@ void UBattleManager::Start(TArray<AEnemy *> enemies)
         if (widget)
         {
             widget->SetVisibility(ESlateVisibility::Collapsed);
-
             widget->AddToViewport();
         }
 
         return widget;
     };
 
-    this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
-
-    this->EnemiesRefs = enemies;
-
-    this->characterRefs.Empty();
-
-    this->characterRefs.Append(*this->heroesRefs);
-
-    this->characterRefs.Append(enemies);
-
     this->SelectActionWidget = setupWidget(this->gameMode->WBP_SelectActionClass);
-
     this->SpellSelectionWidget = setupWidget(this->gameMode->WBP_SelectSpellClass);
-
     this->InventoryListWidget = setupWidget(this->gameMode->WBP_BattleInventoryList);
 
     sortTurn();
@@ -70,10 +71,9 @@ void UBattleManager::SetPlayerActionState()
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     FTimerHandle widgetDelay;
+    float Delay = 0.1f;
 
-    float DelayInSeconds = 0.1f;
-
-    this->gameMode->GetWorld()->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, DelayInSeconds);
+    this->gameMode->GetWorld()->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, Delay);
 }
 
 void UBattleManager::delayedActionSelectionWidgetSettings()
@@ -81,18 +81,14 @@ void UBattleManager::delayedActionSelectionWidgetSettings()
     this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
 
     this->SelectActionWidget->IncrementOrDecrementAction();
-
     this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
-
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
 }
 
 FVector UBattleManager::SetAttackLocation()
 {
     FVector targetLocation = this->TargetCharacter->GetActorLocation();
-
     targetLocation.X -= 70.f;
-
     targetLocation.Y += 50.f;
 
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
@@ -116,7 +112,6 @@ void UBattleManager::SetPlayerSpellSelection()
     this->setWidgetLocationOnScreen(this->SpellSelectionWidget, 70.f, -240.f);
 
     this->SpellSelectionWidget->MoveSpellCursor();
-
     this->SpellSelectionWidget->SetVisibility(ESlateVisibility::Visible);
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_SPELL;
@@ -134,7 +129,6 @@ void UBattleManager::SetPlayerInInventoryList()
     this->setWidgetLocationOnScreen(this->InventoryListWidget, 70.f, -75.f);
 
     this->InventoryListWidget->MoveCursor();
-
     this->InventoryListWidget->SetVisibility(ESlateVisibility::Visible);
 
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ITEM;
@@ -213,9 +207,7 @@ void UBattleManager::setWidgetLocationOnScreen(UUserWidget *widget, float x, flo
     ACombatCharacter *refCharacter = !targetCharacter ? this->TurnCharacter : targetCharacter;
 
     FVector2D SelectActionLocation = refCharacter->GetLocationOnScreen();
-
     SelectActionLocation.X += x;
-
     SelectActionLocation.Y += y;
 
     widget->SetPositionInViewport(SelectActionLocation, true);
