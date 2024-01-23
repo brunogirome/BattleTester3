@@ -14,6 +14,8 @@ class UMyGameInstance;
 
 class AMyPlayerController;
 
+DECLARE_DELEGATE(FOnGameSpawnedHeroes);
+
 /**
  *
  */
@@ -29,6 +31,8 @@ class BATTLETESTERIII_API UPartyManager : public UObject
 	AMyPlayerController *playerController;
 
 public:
+	FOnGameSpawnedHeroes OnGameSpawnedHeroes;
+
 	UPROPERTY(BlueprintReadWrite)
 	TArray<AHero *> PartyMembers;
 

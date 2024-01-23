@@ -5,15 +5,18 @@
 #include "Characters/Hero.h"
 #include "Battle/Battlefield.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 #include "Structs/BattleSpot.h"
 
 void AEnemy::Tick(float DeltaTime)
 {
   Super::Tick(DeltaTime);
 
-  if (!this->IsFollowing && this->IsAggroActive)
+  // if (!this->IsFollowing && this->IsAggroActive)
+  if (this->IsAggroActive)
   {
-    this->IsFollowing = true;
+    // this->IsFollowing = true;
 
     if (this->HeroTarget)
     {
@@ -22,11 +25,16 @@ void AEnemy::Tick(float DeltaTime)
   }
 }
 
-void AEnemy::SetAggro(bool newAggroStatus, ACombatCharacter *hetoToFollow)
+void AEnemy::SetAggro(bool newAggroStatus, ACombatCharacter *heroToFollow)
 {
   this->IsAggroActive = newAggroStatus;
 
-  this->HeroTarget = hetoToFollow;
+  this->HeroTarget = heroToFollow;
+
+  if (!newAggroStatus)
+  {
+    this->GetCharacterMovement()->StopActiveMovement();
+  }
 }
 
 void AEnemy::SetupBattle(FBattleSpot position, ABattlefield *battlefieldInstance)
@@ -44,6 +52,11 @@ void AEnemy::triggerBattleStart(AActor *otherActor)
   }
 
   if (otherActor != this->HeroTarget)
+  {
+    return;
+  }
+
+  if (!this->ownerBattlefield)
   {
     return;
   }

@@ -19,21 +19,27 @@ class BATTLETESTERIII_API ABattleAIController : public AAIController
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(BlueprintReadOnly)
 	FAIRequestID requestMoveToSpotID;
 
+	UPROPERTY(BlueprintReadWrite)
 	ACombatCharacter *controlledPawn;
 
+	UPROPERTY(BlueprintReadOnly)
 	UBattleManager *battleManagerInstance;
 
-protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float battleWalkSpeed = 2000.f;
 
-public:
-	void
-	MoveToBattleSpot();
+	virtual void OnPossess(APawn *InPawn) override;
 
-	void OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result);
+public:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void MoveToBattleSpot();
+	// void MoveToBattleSpot();
+
+	// void OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result);
 
 	virtual void BeginPlay() override;
 };

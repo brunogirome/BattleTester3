@@ -19,6 +19,7 @@
 #include "Characters/Enemy.h"
 
 #include "Enums/BattleState.h"
+#include "Enums/WorldState.h"
 
 void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef)
 {
@@ -63,7 +64,7 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
     this->SpellSelectionWidget = setupWidget(this->gameMode->WBP_SelectSpellClass);
     this->InventoryListWidget = setupWidget(this->gameMode->WBP_BattleInventoryList);
 
-    sortTurn();
+    // sortTurn();
 }
 
 void UBattleManager::SetPlayerActionState()

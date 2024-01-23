@@ -2,6 +2,7 @@
 
 #include "Battle/Battlefield.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/Texture2D.h"
@@ -15,6 +16,7 @@
 #include "AI/BattleAIController.h"
 #include "Characters/Enemy.h"
 #include "Characters/Hero.h"
+#include "Enums/WorldState.h"
 #include "Enums/CharacterDirection.h"
 
 #if WITH_EDITOR
@@ -53,30 +55,25 @@ void ABattlefield::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->partyMembers = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager->PartyMembers;
+	this->partyManager = Cast<UMyGameInstance>(this->GetWorld()->GetGameInstance())->PartyManager;
 
-	for (int i = 0; i < this->MAX_NUMBER_OF_HEROES && this->partyMembers.Num(); i++)
-	{
-		AHero *hero = this->partyMembers[i];
+	this->gameMode = Cast<AMyGameMode>(this->GetWorld()->GetAuthGameMode());
 
-		if (hero && this->HeroesPositions[i])
-		{
-			hero->SetBattleSpot(this->HeroesPositions[i]->GetBattleSpot());
-
-			this->amountOfBattleSpots++;
-		}
-	}
-
-	for (int i = 0; i < this->MAX_NUMBER_OF_ENEMIES && this->Enemies.Num(); i++)
+	for (int i = 0; i < this->MAX_NUMBER_OF_ENEMIES && i < this->Enemies.Num(); i++)
 	{
 		AEnemy *enemy = this->Enemies[i];
 
 		if (this->Enemies[i] && this->EnemiesPositions[i])
 		{
-			enemy->SetBattleSpot(this->EnemiesPositions[i]->GetBattleSpot());
+			enemy->SetupBattle(this->EnemiesPositions[i]->GetBattleSpot(), this);
 
 			this->amountOfBattleSpots++;
 		}
+	}
+
+	if (this->partyManager)
+	{
+		this->partyManager->OnGameSpawnedHeroes.BindUObject(this, &ABattlefield::LoadHeroesReferances);
 	}
 }
 
@@ -88,33 +85,42 @@ void ABattlefield::IncrementSucessBattleSpots()
 	{
 		this->BattleStarted = true;
 
-		AMyGameMode *gameMode = Cast<AMyGameMode>(this->GetWorld()->GetAuthGameMode());
-
-		if (gameMode)
+		if (this->gameMode->BattleManager)
 		{
-			if (gameMode->BattleManager)
-			{
-				gameMode->BattleManager->Start(this);
-			}
+			this->gameMode->BattleManager->Start(this);
+			gameMode->BattleManager->SetPlayerActionState();
 		}
 	}
 }
 
 void ABattlefield::MoveActorsToBattleLocations()
 {
-	auto executeMoveToActor = [&](ACombatCharacter *actor)
+
+	if (!this->gameMode->BattleManager || !this->partyManager)
 	{
-		if (!actor)
+		return;
+	}
+
+	this->gameMode->WorldState = EWorldState::WORLD_STATE_BATTLE;
+
+	auto executeMoveToActor = [&](ACombatCharacter *pawn)
+	{
+		if (!pawn)
 		{
 			return;
 		}
 
-		ABattleAIController *actorIAController = Cast<ABattleAIController>(actor->GetController());
+		pawn->GetCharacterMovement()->StopActiveMovement();
 
-		actorIAController->MoveToBattleSpot();
+		ABattleAIController *actorIAController = Cast<ABattleAIController>(pawn->GetController());
+
+		if (actorIAController)
+		{
+			actorIAController->MoveToBattleSpot();
+		}
 	};
 
-	for (AHero *hero : this->partyMembers)
+	for (AHero *hero : this->partyManager->PartyMembers)
 	{
 		executeMoveToActor(hero);
 	}
@@ -122,6 +128,60 @@ void ABattlefield::MoveActorsToBattleLocations()
 	for (AEnemy *enemy : this->Enemies)
 	{
 		executeMoveToActor(enemy);
+	}
+}
+
+void ABattlefield::ActivateEnemyAggros(AActor *otherActor)
+{
+	if (this->BattleStarted || !otherActor)
+	{
+		return;
+	}
+
+	AHero *hero = Cast<AHero>(otherActor);
+
+	if (!hero)
+	{
+		return;
+	}
+
+	for (AEnemy *enemy : this->Enemies)
+	{
+		if (enemy)
+		{
+			enemy->SetAggro(true, hero);
+		}
+	}
+}
+
+void ABattlefield::DeactivateEnemyAggros()
+{
+	for (AEnemy *enemy : this->Enemies)
+	{
+		if (enemy)
+		{
+			enemy->SetAggro(false);
+		}
+	}
+}
+
+void ABattlefield::LoadHeroesReferances()
+{
+	if (!this->partyManager)
+	{
+		return;
+	}
+
+	for (int i = 0; i < this->MAX_NUMBER_OF_HEROES && i < this->partyManager->PartyMembers.Num(); i++)
+	{
+		AHero *hero = this->partyManager->PartyMembers[i];
+
+		if (hero && this->HeroesPositions[i])
+		{
+			hero->SetBattleSpot(this->HeroesPositions[i]->GetBattleSpot());
+
+			this->amountOfBattleSpots++;
+		}
 	}
 }
 

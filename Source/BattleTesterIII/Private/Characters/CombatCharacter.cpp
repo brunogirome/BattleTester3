@@ -8,7 +8,7 @@
 
 #include "MyGameMode.h"
 
-#include "AI/BattleAIController.h"
+// #include "AI/BattleAIController.h"
 
 #include "Enums/CombatStatus.h"
 
@@ -90,5 +90,5 @@ ACombatCharacter::ACombatCharacter()
   this->DisplayTarget->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
   this->DisplayTarget->SetVisibility(false);
 
-  this->AIControllerClass = ABattleAIController::StaticClass();
+  // this->AIControllerClass = ABattleAIController::StaticClass();
 }

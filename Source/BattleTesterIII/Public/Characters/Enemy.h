@@ -28,8 +28,8 @@ protected:
 	void triggerBattleStart(AActor *otherActor);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Battle|Aggro")
-	bool IsFollowing;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Battle|Aggro")
+	// bool IsFollowing;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Battle|Aggro")
 	bool IsAggroActive;
@@ -41,7 +41,7 @@ public:
 	ACombatCharacter *HeroTarget;
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Aggro")
-	void SetAggro(bool newAggroStatus, ACombatCharacter *hetoToFollow = nullptr);
+	void SetAggro(bool newAggroStatus, ACombatCharacter *heroToFollow = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Aggro")
 	void SetupBattle(FBattleSpot position, ABattlefield *battlefieldInstance);

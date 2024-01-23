@@ -7,10 +7,10 @@
 
 #include "MyGameInstance.generated.h"
 
-class UPartyManager;
-
 class UPaperFlipbook;
 
+class ABattleAIController;
+class UPartyManager;
 class AHero;
 
 /**
@@ -29,6 +29,9 @@ protected:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Party")
 	TArray<FName> PartyMemberNames;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Party")
+	TSubclassOf<ABattleAIController> AIC_BattleAIControllerClass;
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Party")

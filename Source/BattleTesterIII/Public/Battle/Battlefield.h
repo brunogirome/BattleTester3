@@ -13,6 +13,8 @@ class UBattleSpotBillboardComponent;
 class UTextRenderComponent;
 class UTexture2D;
 
+class AMyGameMode;
+class UPartyManager;
 class AHero;
 class AEnemy;
 
@@ -27,7 +29,9 @@ class BATTLETESTERIII_API ABattlefield : public AActor
 
 	int32 amountOfActorsReachedBattleSpot;
 
-	TArray<AHero *> partyMembers;
+	AMyGameMode *gameMode;
+
+	UPartyManager *partyManager;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Battlefield Textures")
@@ -69,6 +73,14 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	bool BattleStarted;
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateEnemyAggros(AActor *otherActor);
+
+	UFUNCTION(BlueprintCallable)
+	void DeactivateEnemyAggros();
+
+	void LoadHeroesReferances();
 
 	const static int32 ICON_HEIGHT = 55;
 

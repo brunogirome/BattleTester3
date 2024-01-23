@@ -64,6 +64,8 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 
 	friend class ABattleAIController;
 
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Battle Control")
 	FBattleSpot battleSpot;
 
 public:

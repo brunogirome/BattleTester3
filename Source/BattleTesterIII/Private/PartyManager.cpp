@@ -5,12 +5,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
 
-#include "GameFramework/CharacterMovementComponent.h"
-
 #include "MyGameInstance.h"
 #include "MyGameMode.h"
 #include "MyPlayerController.h"
-
+#include "AI/BattleAIController.h"
 #include "Characters/Hero.h"
 
 void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
@@ -53,6 +51,17 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
 
     hero->SpawnDefaultController();
 
+    // if (hero->GetController())
+    // {
+    //   hero->GetController()->Destroy();
+    // }
+
+    // ABattleAIController *heroAIController = this->gameMode->GetWorld()->SpawnActor<ABattleAIController>(this->gameInstance->AIC_BattleAIControllerClass);
+    // if (heroAIController)
+    // {
+    //   heroAIController->Possess(hero);
+    // }
+
     this->PartyMembers.Add(hero);
 
     if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i])
@@ -71,6 +80,8 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
       this->PartyMembers[i]->TargetFollowHero = this->PartyMembers[i - 1];
     }
   }
+
+  OnGameSpawnedHeroes.ExecuteIfBound();
 }
 
 void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef)
