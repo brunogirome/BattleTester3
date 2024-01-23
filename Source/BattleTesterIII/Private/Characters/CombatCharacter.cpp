@@ -6,8 +6,6 @@
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
 
-#include "MyGameMode.h"
-
 // #include "AI/BattleAIController.h"
 
 #include "Enums/CombatStatus.h"

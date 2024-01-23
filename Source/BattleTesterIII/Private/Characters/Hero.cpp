@@ -2,14 +2,23 @@
 
 #include "Characters/Hero.h"
 
+#include "MyGameMode.h"
+
 void AHero::BeginPlay()
 {
   Super::BeginPlay();
+
+  this->gameMode = Cast<AMyGameMode>(this->GetWorld()->GetAuthGameMode());
 }
 
 void AHero::Tick(float DeltaTime)
 {
   Super::Tick(DeltaTime);
+
+  if (this->gameMode->IsInBattle())
+  {
+    return;
+  }
 
   if (this->DoSaveMovimentHistory)
   {

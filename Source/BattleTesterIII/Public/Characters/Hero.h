@@ -6,6 +6,8 @@
 #include "CombatCharacter.h"
 #include "Hero.generated.h"
 
+class AMyGameMode;
+
 /**
  *
  */
@@ -13,6 +15,8 @@ UCLASS()
 class BATTLETESTERIII_API AHero : public ACombatCharacter
 {
 	GENERATED_BODY()
+
+	AMyGameMode *gameMode;
 
 	float const ACCEPTANCE_RADIUS = 120.f;
 

@@ -37,9 +37,11 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MoveToBattleSpot();
-	// void MoveToBattleSpot();
 
 	// void OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result);
+
+	UFUNCTION(BlueprintCallable)
+	void OnReachedBattleSpot();
 
 	virtual void BeginPlay() override;
 };

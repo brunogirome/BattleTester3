@@ -16,8 +16,6 @@ void ABattleAIController::BeginPlay()
 {
   Super::BeginPlay();
 
-  // this->controlledPawn = Cast<ACombatCharacter>(this->GetPawn());
-
   AMyGameMode *gameMode = Cast<AMyGameMode>(this->GetWorld()->GetAuthGameMode());
 
   if (gameMode)
@@ -37,6 +35,26 @@ void ABattleAIController::OnPossess(APawn *InPawn)
   if (combatChar)
   {
     this->controlledPawn = combatChar;
+  }
+}
+
+void ABattleAIController::OnReachedBattleSpot()
+{
+  if (!this->controlledPawn)
+  {
+    return;
+  }
+
+  this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
+
+  if (!this->battleManagerInstance)
+  {
+    return;
+  }
+
+  if (this->battleManagerInstance->BattlefieldInstance)
+  {
+    this->battleManagerInstance->BattlefieldInstance->IncrementSucessBattleSpots();
   }
 }
 
@@ -60,34 +78,37 @@ void ABattleAIController::OnPossess(APawn *InPawn)
 
 // void ABattleAIController::OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result)
 // {
+
 //   if (Result.IsSuccess())
 //   {
-//     // if (requestMoveToSpotID == RequestID)
-//     // {
-//     FTimerHandle TimerHandle;
-//     float Delay = 0.1f;
+//     if (requestMoveToSpotID == RequestID)
+//     {
+//       GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Ended");
 
-//     this->GetWorld()->GetTimerManager().SetTimer(
-//         TimerHandle, [&]()
-//         {
-//             if (!this->controlledPawn)
-//             {
-//               return;
-//             }
+//       FTimerHandle TimerHandle;
+//       float Delay = 0.1f;
 
-//             this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
+//       this->GetWorld()->GetTimerManager().SetTimer(
+//           TimerHandle, [&]()
+//           {
 
-//             if (!this->battleManagerInstance)
-//             {
-//               return;
-//             }
+//               if (!this->controlledPawn)
+//               {
+//                 return;
+//               }
 
-//             if (this->battleManagerInstance->BattlefieldInstance)
-//             {
-//               this->battleManagerInstance->BattlefieldInstance->IncrementSucessBattleSpots();
-//             }
-//             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Ended"); },
-//         Delay, false);
-//     // }
+//               this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
+
+//               if (!this->battleManagerInstance)
+//               {
+//                 return;
+//               }
+
+//               if (this->battleManagerInstance->BattlefieldInstance)
+//               {
+//                 this->battleManagerInstance->BattlefieldInstance->IncrementSucessBattleSpots();
+//               } },
+//           Delay, false);
+//     }
 //   }
 // }
