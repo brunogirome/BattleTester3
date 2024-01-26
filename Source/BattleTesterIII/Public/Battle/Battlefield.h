@@ -27,7 +27,7 @@ class BATTLETESTERIII_API ABattlefield : public AActor
 
 	int32 amountOfBattleSpots;
 
-	int32 amountOfActorsReachedBattleSpot;
+	int32 amountOfActorsReachedBattleSpot = 0;
 
 	AMyGameMode *gameMode;
 

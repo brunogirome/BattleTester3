@@ -15,15 +15,6 @@
 void ABattleAIController::BeginPlay()
 {
   Super::BeginPlay();
-
-  AMyGameMode *gameMode = Cast<AMyGameMode>(this->GetWorld()->GetAuthGameMode());
-
-  if (gameMode)
-  {
-    this->battleManagerInstance = gameMode->BattleManager;
-  }
-
-  // this->GetPathFollowingComponent()->OnRequestFinished.AddUObject(this, &ABattleAIController::OnMoveComplete);
 }
 
 void ABattleAIController::OnPossess(APawn *InPawn)
@@ -47,68 +38,8 @@ void ABattleAIController::OnReachedBattleSpot()
 
   this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
 
-  if (!this->battleManagerInstance)
+  if (this->controllingBattlefield)
   {
-    return;
-  }
-
-  if (this->battleManagerInstance->BattlefieldInstance)
-  {
-    this->battleManagerInstance->BattlefieldInstance->IncrementSucessBattleSpots();
+    this->controllingBattlefield->IncrementSucessBattleSpots();
   }
 }
-
-// void ABattleAIController::MoveToBattleSpot()
-// {
-//   if (!this->controlledPawn)
-//   {
-//     return;
-//   }
-
-//   GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Started MoveToBattleSpot");
-
-//   this->controlledPawn->GetCharacterMovement()->MaxWalkSpeed = this->battleWalkSpeed;
-
-//   FVector spotLocation = this->controlledPawn->battleSpot.Location;
-//   float acceptanceRadius = 0.1f;
-//   bool stopOnOverlap = false;
-
-//   this->requestMoveToSpotID = this->MoveToLocation(spotLocation, acceptanceRadius, stopOnOverlap);
-// }
-
-// void ABattleAIController::OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result)
-// {
-
-//   if (Result.IsSuccess())
-//   {
-//     if (requestMoveToSpotID == RequestID)
-//     {
-//       GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Ended");
-
-//       FTimerHandle TimerHandle;
-//       float Delay = 0.1f;
-
-//       this->GetWorld()->GetTimerManager().SetTimer(
-//           TimerHandle, [&]()
-//           {
-
-//               if (!this->controlledPawn)
-//               {
-//                 return;
-//               }
-
-//               this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
-
-//               if (!this->battleManagerInstance)
-//               {
-//                 return;
-//               }
-
-//               if (this->battleManagerInstance->BattlefieldInstance)
-//               {
-//                 this->battleManagerInstance->BattlefieldInstance->IncrementSucessBattleSpots();
-//               } },
-//           Delay, false);
-//     }
-//   }
-// }

@@ -46,15 +46,15 @@ void AEnemy::SetupBattle(FBattleSpot position, ABattlefield *battlefieldInstance
 
 void AEnemy::triggerBattleStart(AActor *otherActor)
 {
-  if (!otherActor || !this->HeroTarget)
-  {
-    return;
-  }
+  // if (!otherActor || !this->HeroTarget)
+  // {
+  //   return;
+  // }
 
-  if (otherActor != this->HeroTarget)
-  {
-    return;
-  }
+  // if (otherActor != this->HeroTarget)
+  // {
+  //   return;
+  // }
 
   if (!this->ownerBattlefield)
   {

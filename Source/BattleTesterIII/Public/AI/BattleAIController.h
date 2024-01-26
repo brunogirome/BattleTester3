@@ -8,7 +8,7 @@
 #include "BattleAIController.generated.h"
 
 class ACombatCharacter;
-
+class ABattlefield;
 class UBattleManager;
 
 /**
@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UBattleManager *battleManagerInstance;
 
+	UPROPERTY(BlueprintReadWrite)
+	ABattlefield *controllingBattlefield;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float battleWalkSpeed = 2000.f;
 
@@ -36,9 +39,7 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void MoveToBattleSpot();
-
-	// void OnMoveComplete(FAIRequestID RequestID, const FPathFollowingResult &Result);
+	void MoveToBattleSpot(ABattlefield *controllingBattlefieldReferance);
 
 	UFUNCTION(BlueprintCallable)
 	void OnReachedBattleSpot();

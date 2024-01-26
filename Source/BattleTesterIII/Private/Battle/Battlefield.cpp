@@ -88,14 +88,13 @@ void ABattlefield::IncrementSucessBattleSpots()
 		if (this->gameMode->BattleManager)
 		{
 			this->gameMode->BattleManager->Start(this);
-			gameMode->BattleManager->SetPlayerActionState();
+			// gameMode->BattleManager->SetPlayerActionState();
 		}
 	}
 }
 
 void ABattlefield::MoveActorsToBattleLocations()
 {
-
 	if (!this->gameMode->BattleManager || !this->partyManager)
 	{
 		return;
@@ -116,7 +115,7 @@ void ABattlefield::MoveActorsToBattleLocations()
 
 		if (actorIAController)
 		{
-			actorIAController->MoveToBattleSpot();
+			actorIAController->MoveToBattleSpot(this);
 		}
 	};
 

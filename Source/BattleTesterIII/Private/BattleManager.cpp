@@ -14,7 +14,7 @@
 #include "Widgets/BattleInventoryList.h"
 
 #include "Battle/Battlefield.h"
-#include "Characters/CombatCharacter.h"
+#include "Characters/CameraPawn.h"
 #include "Characters/Hero.h"
 #include "Characters/Enemy.h"
 
@@ -28,8 +28,6 @@ void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gam
     this->gameMode = gameModeRef;
 
     this->playerController = Cast<AMyPlayerController>(this->gameMode->GetWorld()->GetFirstPlayerController());
-
-    // this->springArmRef = this->playerController->CameraSpringArm;
 }
 
 void UBattleManager::Start(ABattlefield *currentBattlefield)
@@ -64,11 +62,26 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
     this->SpellSelectionWidget = setupWidget(this->gameMode->WBP_SelectSpellClass);
     this->InventoryListWidget = setupWidget(this->gameMode->WBP_BattleInventoryList);
 
-    // sortTurn();
+    ACameraPawn *cameraPawn = Cast<ACameraPawn>(this->playerController->GetPawn());
+
+    if (cameraPawn)
+    {
+        if (cameraPawn->CameraSpringArm)
+        {
+            this->springArmRef = cameraPawn->CameraSpringArm;
+        }
+    }
+
+    sortTurn();
 }
 
 void UBattleManager::SetPlayerActionState()
 {
+    if (!this->TurnCharacter && !this->springArmRef && !this->gameMode)
+    {
+        return;
+    }
+
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     FTimerHandle widgetDelay;
