@@ -51,17 +51,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
 
     hero->SpawnDefaultController();
 
-    // if (hero->GetController())
-    // {
-    //   hero->GetController()->Destroy();
-    // }
-
-    // ABattleAIController *heroAIController = this->gameMode->GetWorld()->SpawnActor<ABattleAIController>(this->gameInstance->AIC_BattleAIControllerClass);
-    // if (heroAIController)
-    // {
-    //   heroAIController->Possess(hero);
-    // }
-
     this->PartyMembers.Add(hero);
 
     if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i])

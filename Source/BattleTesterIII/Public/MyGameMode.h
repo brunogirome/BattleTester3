@@ -5,21 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 
+#include "Delegates/Delegate.h"
+
 #include "MyGameMode.generated.h"
 
 class UMyGameInstance;
-
 class UBattleManager;
-
 class USelectAction;
-
 class USpellSelection;
-
 class UBattleInventoryList;
 
 enum EBattleState : uint8;
-
 enum EWorldState : uint8;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSetupedManagementInstances);
 
 /**
  *
@@ -45,6 +44,8 @@ protected:
 	TSubclassOf<UBattleInventoryList> WBP_BattleInventoryList;
 
 public:
+	FSetupedManagementInstances OnSetupedManagementInstances;
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "World State")
 	bool IsInOverWorld();
 
@@ -59,9 +60,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TEnumAsByte<EBattleState> GetBattleState();
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SpawnParty();
 
 	virtual void BeginPlay() override;
 

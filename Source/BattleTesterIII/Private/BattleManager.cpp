@@ -72,6 +72,11 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
         }
     }
 
+    if (OnBattleStarted.IsBound())
+    {
+        OnBattleStarted.Broadcast();
+    }
+
     sortTurn();
 }
 

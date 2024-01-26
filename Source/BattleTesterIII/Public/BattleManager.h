@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 
+#include "Delegates/Delegate.h"
+
 #include "BattleManager.generated.h"
 
 class USpringArmComponent;
@@ -23,6 +25,9 @@ class USpellSelection;
 class UBattleInventoryList;
 
 enum EBattleState : uint8;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartedBattleDelegate);
+
 /**
  *
  */
@@ -80,6 +85,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "State Management|Variable")
 	ABattlefield *BattlefieldInstance;
+
+	UPROPERTY(BlueprintAssignable, Category = "State Management|Event")
+	FStartedBattleDelegate OnBattleStarted;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Action")
 	void SetPlayerActionState();
