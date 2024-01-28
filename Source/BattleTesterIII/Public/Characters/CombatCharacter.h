@@ -11,6 +11,8 @@
 
 class USpringArmComponent;
 class UPaperFlipbookComponent;
+class UMyGameInstance;
+class ABattleAIController;
 
 enum ECombatStatus : uint8;
 
@@ -92,6 +94,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Battle Control")
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
+
+	UFUNCTION(BlueprintCallable, Blueprintpure, Category = "Battle Control")
+	ABattleAIController *GetBattleAIController();
 
 	void RemoveCursor();
 

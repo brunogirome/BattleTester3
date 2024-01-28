@@ -7,16 +7,12 @@
 
 #include "MyPlayerController.generated.h"
 
-class UMyGameInstance;
-
 class USpringArmComponent;
-
+class UMyGameInstance;
 class AMyGameMode;
-
+class ABattleAIController;
 class UPartyManager;
-
 class UBattleManager;
-
 class AHero;
 
 enum EBattleState : uint8;
@@ -44,6 +40,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Battle")
 	UBattleManager *battleManager;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
+	AHero *GetTurnHero();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
+	ABattleAIController *GetTurnHeroAIController();
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);

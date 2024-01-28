@@ -10,6 +10,8 @@
 #include "PartyManager.h"
 #include "BattleManager.h"
 
+#include "AI/BattleAIController.h"
+
 #include "Characters/Hero.h"
 #include "Characters/CameraPawn.h"
 
@@ -24,9 +26,7 @@ void AMyPlayerController::BeginPlay()
   Super::BeginPlay();
 
   this->gameMode = this->GetWorld()->GetAuthGameMode<AMyGameMode>();
-
   this->battleManager = this->gameMode->BattleManager;
-
   this->partyManager = Cast<UMyGameInstance>(this->GetGameInstance())->PartyManager;
 
   if (this->partyManager)
@@ -39,19 +39,51 @@ void AMyPlayerController::BeginPlay()
   if (this->partyLeader && cameraPawn)
   {
     this->springArmRef = cameraPawn->CameraSpringArm;
-
     this->partyLeader->SetAsCameraFocus(this->springArmRef);
   }
+}
+
+AHero *AMyPlayerController::GetTurnHero()
+{
+  if (!this->battleManager)
+  {
+    return nullptr;
+  }
+
+  if (this->battleManager->TurnCharacter)
+  {
+    AHero *currentHero = Cast<AHero>(this->battleManager->TurnCharacter);
+
+    if (currentHero)
+    {
+      return currentHero;
+    }
+  }
+
+  return nullptr;
+}
+
+ABattleAIController *AMyPlayerController::GetTurnHeroAIController()
+{
+  if (!this->GetTurnHero())
+  {
+    return nullptr;
+  }
+
+  if (this->GetTurnHero()->GetBattleAIController())
+  {
+    return this->GetTurnHero()->GetBattleAIController();
+  }
+
+  return nullptr;
 }
 
 void AMyPlayerController::MovePartyLeader(FVector2D input)
 {
   FVector directionX = FVector(1.f, 0.f, 0.f);
-
   this->partyLeader->AddMovementInput(directionX, input.X, false);
 
   FVector directionY = FVector(0.f, -1.f, 0.f);
-
   this->partyLeader->AddMovementInput(directionY, input.Y, false);
 }
 
@@ -68,7 +100,6 @@ void AMyPlayerController::IncrementOrDecrementActionIndex(FVector2D input)
 void AMyPlayerController::CancelAttack()
 {
   this->battleManager->TargetCharacter->RemoveCursor();
-
   this->battleManager->SetPlayerActionState();
 }
 

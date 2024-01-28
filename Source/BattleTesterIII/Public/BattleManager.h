@@ -28,6 +28,8 @@ enum EBattleState : uint8;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartedBattleDelegate);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFrontOfOponentDelegate);
+
 /**
  *
  */
@@ -112,6 +114,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SelectNextEnemyTarget(FVector2D input = FVector2D(0.f, 0.f));
+
+	UPROPERTY(BlueprintAssignable, Category = "Select Target|Event")
+	FOnFrontOfOponentDelegate OnFrontOfOponent;
+
+	UFUNCTION(BlueprintCallable, Category = "Select Target|Event")
+	void OnFrontOfOponentBroadcast();
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	FVector SetAttackLocation();

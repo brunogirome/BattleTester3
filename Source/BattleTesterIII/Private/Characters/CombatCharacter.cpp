@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
 
-// #include "AI/BattleAIController.h"
+#include "AI/BattleAIController.h"
 
 #include "Enums/CombatStatus.h"
 
@@ -44,6 +44,18 @@ void ACombatCharacter::SetBattleSpot(FBattleSpot newBattleSpot)
   this->battleSpot = newBattleSpot;
 }
 
+ABattleAIController *ACombatCharacter::GetBattleAIController()
+{
+  ABattleAIController *validController = Cast<ABattleAIController>(this->GetController());
+
+  if (validController)
+  {
+    return validController;
+  }
+
+  return nullptr;
+}
+
 void ACombatCharacter::RemoveCursor()
 {
   this->DisplayTarget->SetVisibility(false);
@@ -78,6 +90,16 @@ void ACombatCharacter::BeginPlay()
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_SPEED, this->FakeStatus.Speed);
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_EVASION, this->FakeStatus.Evasion);
   }
+
+  // if (this->GetWorld()->GetGameInstance())
+  // {
+  //   UMyGameInstance *validGameInstance = Cast<UMyGameInstance>(this->GetWorld()->GetGameInstance());
+
+  //   if (validGameInstance)
+  //   {
+  //     this->gameInstance = validGameInstance;
+  //   }
+  // }
 }
 
 ACombatCharacter::ACombatCharacter()

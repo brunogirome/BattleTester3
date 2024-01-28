@@ -26,7 +26,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	ACombatCharacter *controlledPawn;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	UBattleManager *battleManagerInstance;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -40,6 +40,9 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MoveToBattleSpot(ABattlefield *controllingBattlefieldReferance);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void MoveToSelectedTarget();
 
 	UFUNCTION(BlueprintCallable)
 	void OnReachedBattleSpot();
