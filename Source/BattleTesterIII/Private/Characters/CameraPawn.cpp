@@ -9,19 +9,15 @@
 // Sets default values
 ACameraPawn::ACameraPawn()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	this->PrimaryActorTick.bCanEverTick = false;
 
-	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-
-	RootComponent = CapsuleComponent;
+	this->CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	this->RootComponent = this->CapsuleComponent;
 
 	this->CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
-
 	this->CameraSpringArm->SetupAttachment(RootComponent);
-
 	this->CameraSpringArm->TargetArmLength = 700.f;
 
 	this->PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-
 	this->PlayerCamera->SetupAttachment(this->CameraSpringArm, USpringArmComponent::SocketName);
 }

@@ -49,15 +49,12 @@ void AHero::followMovementHistory()
   }
 
   int historyIndex = FMath::Min(this->FOLLOW_DISTANCE, TargetFollowHero->movementHistory.Num() - 1);
-
   FVector targetPoint = TargetFollowHero->movementHistory[historyIndex];
-
   FVector direction = (targetPoint - GetActorLocation()).GetSafeNormal();
-
   float distance = FVector::Dist(targetPoint, GetActorLocation());
 
   if (distance > this->ACCEPTANCE_RADIUS)
   {
-    AddMovementInput(direction, 1.0f, false);
+    this->AddMovementInput(direction, 1.0f, false);
   }
 }

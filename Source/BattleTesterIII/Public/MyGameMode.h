@@ -43,6 +43,9 @@ protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Widget Classes")
 	TSubclassOf<UBattleInventoryList> WBP_BattleInventoryList;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Battle|Actor Classes")
+	TSubclassOf<AActor> BP_DamageDisplay;
+
 public:
 	FSetupedManagementInstances OnSetupedManagementInstances;
 

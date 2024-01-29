@@ -25,6 +25,7 @@ class USpellSelection;
 class UBattleInventoryList;
 
 enum EBattleState : uint8;
+enum EAttackStrength : uint8;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartedBattleDelegate);
 
@@ -125,6 +126,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	FVector SetAttackLocation();
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void CalculatePhysicialDamage(EAttackStrength attackStrength);
 
 	UPROPERTY(BlueprintAssignable, Category = "Attack|Event")
 	FOnFinishedAttackAnimDelegate OnFinishedAttackAnim;

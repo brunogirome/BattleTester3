@@ -14,12 +14,14 @@
 #include "Widgets/BattleInventoryList.h"
 
 #include "Battle/Battlefield.h"
+#include "Battle/DamageDisplay.h"
 #include "Characters/CameraPawn.h"
 #include "Characters/Hero.h"
 #include "Characters/Enemy.h"
 
 #include "Enums/BattleState.h"
 #include "Enums/WorldState.h"
+#include "Enums/AttackStrength.h"
 
 void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef)
 {
@@ -117,6 +119,62 @@ FVector UBattleManager::SetAttackLocation()
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     return targetLocation;
+}
+
+void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
+{
+    float damage = 0;
+
+    // int32 staminaCost;
+
+    switch (attackStrength)
+    {
+    case EAttackStrength::LIGHT_ATTACK_STRENGTH:
+        damage = 3;
+        break;
+
+    case EAttackStrength::MEDIUM_ATTACK_STRENGTH:
+        damage = 6;
+        break;
+
+    case EAttackStrength::HEAVY_ATTACK_STRENGTH:
+        damage = 40;
+        break;
+    default:
+        break;
+    }
+
+    FVector damageDisplayLocation;
+    FRotator damageDisplayRotation;
+
+    if (this->TargetCharacter)
+    {
+        damageDisplayLocation = this->TargetCharacter->GetActorLocation();
+        damageDisplayRotation = this->TargetCharacter->GetActorRotation();
+    }
+
+    FQuat damageDisplayQuat = FQuat(damageDisplayRotation);
+
+    FTransform transform = FTransform(damageDisplayQuat, damageDisplayLocation, FVector(1.f, 1.f, 1.f));
+
+    if (this->gameMode->BP_DamageDisplay)
+    {
+        // FActorSpawnParameters SpawnParams;
+        // SpawnParams.bDeferConstruction = true;
+        ADamageDisplay *DamageDisplay = this->gameMode->GetWorld()->SpawnActorDeferred<ADamageDisplay>(this->gameMode->BP_DamageDisplay, transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::Undefined);
+
+        if (DamageDisplay)
+        {
+            DamageDisplay->DamageAmount = damage;
+
+            DamageDisplay->FinishSpawning(transform);
+        }
+    }
+
+    if (this->OnFinishedAttackAnim.IsBound())
+    {
+        this->OnFinishedAttackAnim.Broadcast();
+    }
 }
 
 void UBattleManager::OnFinishedAttackAnimBroadcast()
