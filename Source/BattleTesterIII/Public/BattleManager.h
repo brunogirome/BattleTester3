@@ -30,6 +30,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartedBattleDelegate);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFrontOfOponentDelegate);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedAttackAnimDelegate);
+
 /**
  *
  */
@@ -123,6 +125,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	FVector SetAttackLocation();
+
+	UPROPERTY(BlueprintAssignable, Category = "Attack|Event")
+	FOnFinishedAttackAnimDelegate OnFinishedAttackAnim;
+
+	UFUNCTION(BlueprintCallable, Category = "Attack|Event")
+	void OnFinishedAttackAnimBroadcast();
 
 	UBattleManager();
 };

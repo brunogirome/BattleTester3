@@ -119,6 +119,16 @@ FVector UBattleManager::SetAttackLocation()
     return targetLocation;
 }
 
+void UBattleManager::OnFinishedAttackAnimBroadcast()
+{
+    if (OnFinishedAttackAnim.IsBound())
+    {
+        OnFinishedAttackAnim.Broadcast();
+    }
+
+    // this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK;
+}
+
 void UBattleManager::OnFrontOfOponentBroadcast()
 {
     if (OnFrontOfOponent.IsBound())
