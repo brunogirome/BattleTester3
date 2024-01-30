@@ -11,6 +11,7 @@ class UPaperFlipbook;
 
 class ABattleAIController;
 class UPartyManager;
+class UDataTable;
 class AHero;
 
 /**
@@ -36,6 +37,9 @@ protected:
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Party")
 	UPartyManager *PartyManager;
+
+	UPROPERTY(Editanywhere, Category = "Data Tables")
+	UDataTable *DT_FakeStatus;
 
 	virtual void Init() override;
 

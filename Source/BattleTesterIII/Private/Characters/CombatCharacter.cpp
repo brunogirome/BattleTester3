@@ -2,10 +2,12 @@
 
 #include "Characters/CombatCharacter.h"
 
+#include "Engine/DataTable.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
 
+#include "MyGameInstance.h"
 #include "AI/BattleAIController.h"
 
 #include "Enums/CombatStatus.h"
@@ -76,30 +78,34 @@ void ACombatCharacter::BeginPlay()
 {
   Super::BeginPlay();
 
-  if (this->FakeStatus.IsValid())
+  UMyGameInstance *gameInstance = Cast<UMyGameInstance>(this->GetWorld()->GetGameInstance());
+
+  if (!gameInstance)
   {
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_HP, this->FakeStatus.Hp);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_HP, this->FakeStatus.Hp);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MANA, this->FakeStatus.Mana);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_MANA, this->FakeStatus.Mana);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE, this->FakeStatus.PhysicalDamage);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE, this->FakeStatus.PhysicalDefense);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DAMAGE, this->FakeStatus.MagicDamage);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DEFENSE, this->FakeStatus.MagicDefense);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_STAMINA, this->FakeStatus.Stamina);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_SPEED, this->FakeStatus.Speed);
-    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_EVASION, this->FakeStatus.Evasion);
+    return;
   }
 
-  // if (this->GetWorld()->GetGameInstance())
-  // {
-  //   UMyGameInstance *validGameInstance = Cast<UMyGameInstance>(this->GetWorld()->GetGameInstance());
+  if (!gameInstance->DT_FakeStatus)
+  {
+    return;
+  }
 
-  //   if (validGameInstance)
-  //   {
-  //     this->gameInstance = validGameInstance;
-  //   }
-  // }
+  FFakeStatus *findFakeStatus = gameInstance->DT_FakeStatus->FindRow<FFakeStatus>(this->FakeCharacterName, "", true);
+
+  if (findFakeStatus)
+  {
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_HP, findFakeStatus->Hp);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_HP, findFakeStatus->Hp);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MANA, findFakeStatus->Mana);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_MANA, findFakeStatus->Mana);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE, findFakeStatus->PhysicalDamage);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE, findFakeStatus->PhysicalDefense);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DAMAGE, findFakeStatus->MagicDamage);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DEFENSE, findFakeStatus->MagicDefense);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_STAMINA, findFakeStatus->Stamina);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_SPEED, findFakeStatus->Speed);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_EVASION, findFakeStatus->Evasion);
+  }
 }
 
 ACombatCharacter::ACombatCharacter()

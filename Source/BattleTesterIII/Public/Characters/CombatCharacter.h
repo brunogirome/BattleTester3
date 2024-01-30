@@ -11,13 +11,13 @@
 
 class USpringArmComponent;
 class UPaperFlipbookComponent;
-class UMyGameInstance;
+// class UMyGameInstance;
 class ABattleAIController;
 
 enum ECombatStatus : uint8;
 
 USTRUCT(BlueprintType)
-struct FFakeStatus
+struct FFakeStatus : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -67,14 +67,18 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 	friend class ABattleAIController;
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Battle Control")
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle Control")
 	FBattleSpot battleSpot;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
-	FFakeStatus FakeStatus = FFakeStatus();
+	UPROPERTY(EditAnywhere, Category = "Fake Data")
+	FName FakeCharacterName;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
+	// FFakeStatus FakeStatus = FFakeStatus();
+
+	UPROPERTY(Editanywhere, BlueprintReadWrite, Category = "Status")
 	TMap<TEnumAsByte<ECombatStatus>, int32> CombatStatus;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Status|Getter")

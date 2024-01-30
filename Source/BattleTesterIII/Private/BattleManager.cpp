@@ -159,8 +159,6 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 
     if (this->gameMode->BP_DamageDisplay)
     {
-        // FActorSpawnParameters SpawnParams;
-        // SpawnParams.bDeferConstruction = true;
         ADamageDisplay *DamageDisplay = this->gameMode->GetWorld()->SpawnActorDeferred<ADamageDisplay>(this->gameMode->BP_DamageDisplay, transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::Undefined);
 
         if (DamageDisplay)

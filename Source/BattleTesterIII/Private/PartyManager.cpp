@@ -43,15 +43,35 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
       continue;
     }
 
-    FActorSpawnParameters spawnParameters;
+    // FActorSpawnParameters spawnParameters;
 
-    spawnParameters.Owner = this->playerController;
+    // spawnParameters.Owner = this->playerController;
 
-    AHero *hero = this->gameMode->GetWorld()->SpawnActor<AHero>(heroClass, startLocation, startRotation);
+    // AHero *hero = this->gameMode->GetWorld()->SpawnActor<AHero>(heroClass, startLocation, startRotation);
 
-    hero->SpawnDefaultController();
+    // hero->SpawnDefaultController();
 
+    // this->PartyMembers.Add(hero);
+
+    // Spawn the actor deferred, which allows you to set properties before it's fully spawned
+    AHero *hero = this->gameMode->GetWorld()->SpawnActorDeferred<AHero>(
+        heroClass,
+        FTransform(startRotation, startLocation),
+        this->playerController,
+        nullptr,
+        ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+    // Agora você pode alterar propriedades no seu Hero antes de finalizar o spawn
+    hero->FakeCharacterName = heroName;
+
+    // Certifique-se de chamar FinishSpawningActor para completar o processo de spawning
+    UGameplayStatics::FinishSpawningActor(hero, FTransform(startRotation, startLocation));
+
+    // Adiciona o herói à lista de membros da party
     this->PartyMembers.Add(hero);
+
+    // Se necessário, você pode spawnar o controlador aqui ou após ajustar as propriedades
+    hero->SpawnDefaultController();
 
     if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i])
     {
