@@ -19,9 +19,19 @@ bool ACombatCharacter::IsDead()
   return this->CombatStatus[ECombatStatus::COMBAT_STATUS_CURRENT_HP] <= 0;
 }
 
+bool ACombatCharacter::IsInBurnout()
+{
+  return this->CombatStatus[ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA] < 0;
+}
+
 void ACombatCharacter::ReciveDamage(int32 amount)
 {
-  this->CombatStatus[ECombatStatus::COMBAT_STATUS_CURRENT_HP] -= FMath::Clamp(amount, 0, this->CombatStatus[ECombatStatus::COMBAT_STATUS_CURRENT_HP]);
+  int32 *currentHp = this->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_HP);
+
+  if (currentHp)
+  {
+    *currentHp -= FMath::Clamp(amount, 0, *currentHp);
+  }
 }
 
 void ACombatCharacter::SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter)
@@ -56,6 +66,16 @@ ABattleAIController *ACombatCharacter::GetBattleAIController()
   }
 
   return nullptr;
+}
+
+void ACombatCharacter::ConsumeStamina(int32 amount)
+{
+  int32 *currentStamina = this->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
+
+  if (currentStamina)
+  {
+    *currentStamina -= amount;
+  }
 }
 
 void ACombatCharacter::RemoveCursor()

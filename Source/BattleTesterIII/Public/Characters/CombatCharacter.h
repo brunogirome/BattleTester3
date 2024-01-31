@@ -84,6 +84,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Fake Data")
 	FName FakeCharacterName;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Status|Fake Data")
+	bool IsInBurnout();
+
 	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
 	// FFakeStatus FakeStatus = FFakeStatus();
 
@@ -113,6 +116,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Blueprintpure, Category = "Battle Control")
 	ABattleAIController *GetBattleAIController();
+
+	void ConsumeStamina(int32 amount);
 
 	void RemoveCursor();
 

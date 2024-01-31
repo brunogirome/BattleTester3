@@ -83,6 +83,11 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
     sortTurn();
 }
 
+void UBattleManager::EndPhase()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "End Phase");
+}
+
 void UBattleManager::SetPlayerActionState()
 {
     if (!this->TurnCharacter && !this->springArmRef && !this->gameMode)
@@ -125,34 +130,25 @@ FVector UBattleManager::SetAttackLocation()
 void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 {
     const float LIGHT_ATTACK_SCALING = 1.f;
-
     const float MEDIUM_ATTACK_SCALING = 1.33f;
-
     const float HEAVY_ATTACK_SCALING = 1.66f;
 
     float damage = 0;
-
     int32 staminaCost = 1;
 
     auto calculateDamage = [&](float scaling) -> int32
     {
-        int32 *characterDamage = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE);
+        int32 *turnCharacterPhysicalDamage = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE);
+        int32 *turnCharacterPhysicalDefense = this->TargetCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE);
 
-        if (!characterDamage)
+        if (!turnCharacterPhysicalDamage ||
+            !turnCharacterPhysicalDefense)
         {
-            characterDamage = 0;
+            return -1;
         }
 
-        float scaledDamage = *characterDamage * scaling;
-
-        int32 *targetDefense = this->TargetCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE);
-
-        if (!targetDefense)
-        {
-            targetDefense = 0;
-        }
-
-        int32 damageDealt = scaledDamage - *targetDefense;
+        float scaledDamage = *turnCharacterPhysicalDamage * scaling;
+        int32 damageDealt = scaledDamage - *turnCharacterPhysicalDefense;
 
         return damageDealt;
     };
@@ -203,15 +199,51 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
         if (DamageDisplay)
         {
             DamageDisplay->DamageAmount = damage;
-
             DamageDisplay->FinishSpawning(transform);
         }
     }
+
+    this->TurnCharacter->ConsumeStamina(staminaCost);
+    this->TargetCharacter->ReciveDamage(damage);
 
     if (this->OnFinishedAttackAnim.IsBound())
     {
         this->OnFinishedAttackAnim.Broadcast();
     }
+}
+
+void UBattleManager::CheckEndOfAttackTurn()
+{
+    int32 *turnCharacterStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
+
+    if (!turnCharacterStamina)
+    {
+        return;
+    }
+
+    if (this->TargetCharacter->IsDead())
+    {
+        if (*turnCharacterStamina >= 0)
+        {
+            if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+            {
+                this->SetPlayerActionState();
+            }
+            else
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Enemy IA Check Attack Turn");
+            }
+        }
+    }
+
+    if (*turnCharacterStamina <= 0)
+    {
+        this->EndPhase();
+    }
+}
+
+void UBattleManager::EndOfAttackTurn()
+{
 }
 
 void UBattleManager::OnFinishedAttackAnimBroadcast()

@@ -73,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void Start(ABattlefield *currentBattlefield);
 
+	UFUNCTION(BlueprintCallable, Category = "State Management")
+	void EndPhase();
+
 	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
 	TEnumAsByte<EBattleState> BattleState;
 
@@ -129,6 +132,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void CalculatePhysicialDamage(EAttackStrength attackStrength);
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void CheckEndOfAttackTurn();
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void EndOfAttackTurn();
 
 	UPROPERTY(BlueprintAssignable, Category = "Attack|Event")
 	FOnFinishedAttackAnimDelegate OnFinishedAttackAnim;
