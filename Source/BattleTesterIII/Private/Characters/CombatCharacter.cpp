@@ -103,6 +103,7 @@ void ACombatCharacter::BeginPlay()
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DAMAGE, findFakeStatus->MagicDamage);
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_MAGIC_DEFENSE, findFakeStatus->MagicDefense);
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_STAMINA, findFakeStatus->Stamina);
+    this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA, findFakeStatus->Stamina);
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_SPEED, findFakeStatus->Speed);
     this->CombatStatus.Add(ECombatStatus::COMBAT_STATUS_EVASION, findFakeStatus->Evasion);
   }

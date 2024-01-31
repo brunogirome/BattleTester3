@@ -124,22 +124,57 @@ FVector UBattleManager::SetAttackLocation()
 
 void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 {
+    const float LIGHT_ATTACK_SCALING = 1.f;
+
+    const float MEDIUM_ATTACK_SCALING = 1.33f;
+
+    const float HEAVY_ATTACK_SCALING = 1.66f;
+
     float damage = 0;
 
-    // int32 staminaCost;
+    int32 staminaCost = 1;
+
+    auto calculateDamage = [&](float scaling) -> int32
+    {
+        int32 *characterDamage = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DAMAGE);
+
+        if (!characterDamage)
+        {
+            characterDamage = 0;
+        }
+
+        float scaledDamage = *characterDamage * scaling;
+
+        int32 *targetDefense = this->TargetCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_PHYSICAL_DEFENSE);
+
+        if (!targetDefense)
+        {
+            targetDefense = 0;
+        }
+
+        int32 damageDealt = scaledDamage - *targetDefense;
+
+        return damageDealt;
+    };
 
     switch (attackStrength)
     {
     case EAttackStrength::LIGHT_ATTACK_STRENGTH:
-        damage = 3;
+        damage = calculateDamage(LIGHT_ATTACK_SCALING);
+
+        staminaCost = 1;
         break;
 
     case EAttackStrength::MEDIUM_ATTACK_STRENGTH:
-        damage = 6;
+        damage = calculateDamage(MEDIUM_ATTACK_SCALING);
+
+        staminaCost = 2;
         break;
 
     case EAttackStrength::HEAVY_ATTACK_STRENGTH:
-        damage = 40;
+        damage = calculateDamage(HEAVY_ATTACK_SCALING);
+
+        staminaCost = 3;
         break;
     default:
         break;
