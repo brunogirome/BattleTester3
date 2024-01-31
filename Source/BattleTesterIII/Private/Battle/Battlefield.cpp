@@ -66,7 +66,6 @@ void ABattlefield::BeginPlay()
 		if (this->Enemies[i] && this->EnemiesPositions[i])
 		{
 			enemy->SetupBattle(this->EnemiesPositions[i]->GetBattleSpot(), this);
-
 			this->amountOfBattleSpots++;
 		}
 	}

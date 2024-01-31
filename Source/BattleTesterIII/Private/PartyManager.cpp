@@ -26,7 +26,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
       if (playerStart)
       {
         startLocation = startLocation.Size() == 0 ? playerStart->GetActorLocation() : startLocation;
-
         startRotation = startRotation.IsZero() ? playerStart->GetActorRotation() : startRotation;
       }
     }
@@ -35,7 +34,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
   for (int32 i = 0; i < this->gameInstance->PartyMemberNames.Num(); i++)
   {
     FName heroName = this->gameInstance->PartyMemberNames[i];
-
     TSubclassOf<AHero> heroClass = this->gameInstance->PartyMemberClasses.FindRef(heroName);
 
     if (!heroClass)
@@ -53,7 +51,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
 
     // this->PartyMembers.Add(hero);
 
-    // Spawn the actor deferred, which allows you to set properties before it's fully spawned
     AHero *hero = this->gameMode->GetWorld()->SpawnActorDeferred<AHero>(
         heroClass,
         FTransform(startRotation, startLocation),
@@ -61,16 +58,11 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
         nullptr,
         ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-    // Agora você pode alterar propriedades no seu Hero antes de finalizar o spawn
     hero->FakeCharacterName = heroName;
+    hero->TypeOfCharacter = ETypeOfCharacter::HERO_CHRACTER;
 
-    // Certifique-se de chamar FinishSpawningActor para completar o processo de spawning
     UGameplayStatics::FinishSpawningActor(hero, FTransform(startRotation, startLocation));
-
-    // Adiciona o herói à lista de membros da party
     this->PartyMembers.Add(hero);
-
-    // Se necessário, você pode spawnar o controlador aqui ou após ajustar as propriedades
     hero->SpawnDefaultController();
 
     if (i != this->gameInstance->PartyMemberNames.Num() - 1 && this->PartyMembers[i])
@@ -81,7 +73,6 @@ void UPartyManager::SpawnParty(FVector startLocation, FRotator startRotation)
     if (this->PartyMembers.Num() == 1)
     {
       this->PartyLeader = this->PartyMembers[0];
-
       this->PartyLeader->IsThePartyLeader = true;
     }
     else if (this->PartyMembers[i] && this->PartyMembers[i - 1])
@@ -101,8 +92,6 @@ void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *ga
   }
 
   this->gameMode = gameModeRef;
-
   this->gameInstance = gameInstanceRef;
-
   this->playerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }

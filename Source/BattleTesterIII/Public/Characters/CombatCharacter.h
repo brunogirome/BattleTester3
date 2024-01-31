@@ -16,6 +16,13 @@ class ABattleAIController;
 
 enum ECombatStatus : uint8;
 
+UENUM(BlueprintType)
+enum ETypeOfCharacter : uint8
+{
+	HERO_CHRACTER,
+	ENEMY_CHRACTER
+};
+
 USTRUCT(BlueprintType)
 struct FFakeStatus : public FTableRowBase
 {
@@ -67,11 +74,13 @@ class BATTLETESTERIII_API ACombatCharacter : public ASpawnnableCharacter
 	friend class ABattleAIController;
 
 protected:
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle Control")
 	FBattleSpot battleSpot;
 
 public:
+	UPROPERTY(EditAnywhere, Category = "Fake Data")
+	TEnumAsByte<ETypeOfCharacter> TypeOfCharacter = ETypeOfCharacter::ENEMY_CHRACTER;
+
 	UPROPERTY(EditAnywhere, Category = "Fake Data")
 	FName FakeCharacterName;
 
@@ -98,6 +107,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Battle Control")
 	void SetAsTarget(USpringArmComponent *springArm, ACombatCharacter *lastCharacter = nullptr);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void PlayStartBattleAnim();
 
 	UFUNCTION(BlueprintCallable, Blueprintpure, Category = "Battle Control")
 	ABattleAIController *GetBattleAIController();

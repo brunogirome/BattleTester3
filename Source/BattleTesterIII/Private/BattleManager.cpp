@@ -22,6 +22,7 @@
 #include "Enums/BattleState.h"
 #include "Enums/WorldState.h"
 #include "Enums/AttackStrength.h"
+#include "Enums/CombatStatus.h"
 
 void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef)
 {
@@ -153,13 +154,16 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
         damageDisplayRotation = this->TargetCharacter->GetActorRotation();
     }
 
-    FQuat damageDisplayQuat = FQuat(damageDisplayRotation);
-
-    FTransform transform = FTransform(damageDisplayQuat, damageDisplayLocation, FVector(1.f, 1.f, 1.f));
+    FTransform transform = FTransform(damageDisplayRotation, damageDisplayLocation);
 
     if (this->gameMode->BP_DamageDisplay)
     {
-        ADamageDisplay *DamageDisplay = this->gameMode->GetWorld()->SpawnActorDeferred<ADamageDisplay>(this->gameMode->BP_DamageDisplay, transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::Undefined);
+        ADamageDisplay *DamageDisplay = this->gameMode->GetWorld()->SpawnActorDeferred<ADamageDisplay>(
+            this->gameMode->BP_DamageDisplay,
+            transform,
+            nullptr,
+            nullptr,
+            ESpawnActorCollisionHandlingMethod::Undefined);
 
         if (DamageDisplay)
         {
@@ -310,14 +314,42 @@ void UBattleManager::setWidgetLocationOnScreen(UUserWidget *widget, float x, flo
 
 void UBattleManager::sortTurn()
 {
-    // characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
-    //                    { return a.Speed > b.Speed; });
+    this->characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
+                             {
+        const int32* speedA = a.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
+        const int32* speedB = b.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
 
-    this->TurnCharacter = (*this->heroesRefs)[0];
+        if (speedA && speedB)
+        {
+            return *speedA > *speedB;
+        }
+        else if (speedA)
+        {
+            return true;
+        }
+        else if (speedB)
+        {
+            return false;
+        }
+        return false; });
 
-    this->SetPlayerActionState();
+    for (ACombatCharacter *character : this->characterRefs)
+    {
+        if (!character->IsDead())
+        {
+            this->TurnCharacter = character;
+            break;
+        }
+    }
 
-    // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TurnCharacter->GetName());
+    if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+    {
+        this->SetPlayerActionState();
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TurnCharacter->GetName());
+    }
 }
 
 uint8 UBattleManager::aliveEnemies()
