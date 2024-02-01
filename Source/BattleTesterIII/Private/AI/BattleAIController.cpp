@@ -36,8 +36,6 @@ void ABattleAIController::OnReachedBattleSpot()
     return;
   }
 
-  this->controlledPawn->SetCharacterDirection(this->controlledPawn->battleSpot.Direction);
-
   if (this->controllingBattlefield)
   {
     this->controllingBattlefield->IncrementSucessBattleSpots();

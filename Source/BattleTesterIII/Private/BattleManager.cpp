@@ -28,9 +28,7 @@
 void UBattleManager::Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef)
 {
     this->heroesRefs = &partyManagerRef->PartyMembers;
-
     this->gameMode = gameModeRef;
-
     this->playerController = Cast<AMyPlayerController>(this->gameMode->GetWorld()->GetFirstPlayerController());
 }
 
@@ -242,7 +240,6 @@ FVector UBattleManager::SetAttackLocation()
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
 
     this->TargetCharacter->RemoveCursor();
-
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
     return targetLocation;
@@ -380,42 +377,6 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
     this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK;
 }
 
-void UBattleManager::CheckEndOfAttackTurn()
-{
-    // int32 *turnCharacterStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
-
-    // if (!turnCharacterStamina)
-    // {
-    //     return;
-    // }
-
-    // if (this->TargetCharacter->IsDead())
-    // {
-    //     if (*turnCharacterStamina <= 0)
-    //     {
-    //         if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
-    //         {
-    //             this->SetPlayerActionState();
-    //         }
-    //         else
-    //         {
-    //             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Enemy IA Check Attack Turn");
-    //         }
-    //     }
-    // }
-
-    // if (*turnCharacterStamina <= 0)
-    // {
-    //     this->endPhase();
-    // }
-
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Calling CheckEndOfAttackTurn");
-}
-
-void UBattleManager::EndOfAttackTurn()
-{
-}
-
 void UBattleManager::OnFrontOfOponentBroadcast()
 {
     if (OnFrontOfOponent.IsBound())
@@ -486,7 +447,6 @@ void UBattleManager::SelectNextEnemyTarget(FVector2D increment)
     auto incrementIndex = [&](int32 startIndex) -> int32
     {
         int32 incrementedIndex = startIndex + vectorIncrementer;
-
         int32 lastEnemyPartyIndex = this->EnemiesRefs.Num() - 1;
 
         if (incrementedIndex < 0)
@@ -502,7 +462,6 @@ void UBattleManager::SelectNextEnemyTarget(FVector2D increment)
     };
 
     int32 newIndex = incrementIndex(this->enemySelectionIndex);
-
     int32 initialIndex = newIndex;
 
     AEnemy *target = this->EnemiesRefs[newIndex];
@@ -510,7 +469,6 @@ void UBattleManager::SelectNextEnemyTarget(FVector2D increment)
     while (target->IsDead())
     {
         vectorIncrementer = increment.X != 0 ? increment.X : 1;
-
         newIndex = incrementIndex(newIndex);
 
         if (initialIndex == newIndex)
@@ -554,7 +512,6 @@ bool UBattleManager::isGameOver()
 
 bool UBattleManager::isVictory()
 {
-
     for (AEnemy *enemy : this->EnemiesRefs)
     {
         if (!enemy->IsDead())
@@ -569,8 +526,6 @@ bool UBattleManager::isVictory()
 UBattleManager::UBattleManager()
 {
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
-
     this->TurnCharacter = nullptr;
-
     this->enemySelectionIndex = 0;
 }

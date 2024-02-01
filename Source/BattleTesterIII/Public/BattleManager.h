@@ -132,11 +132,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void CalculatePhysicialDamage(EAttackStrength attackStrength);
 
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	void CheckEndOfAttackTurn();
-
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	void EndOfAttackTurn();
-
 	UBattleManager();
 };
