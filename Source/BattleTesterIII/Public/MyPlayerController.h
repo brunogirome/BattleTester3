@@ -28,6 +28,9 @@ class BATTLETESTERIII_API AMyPlayerController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Battle")
+	void GoBackToBattleLocation();
+
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Overworld")
 	AHero *partyLeader;
@@ -46,9 +49,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
 	ABattleAIController *GetTurnHeroAIController();
-
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Battle")
-	void GoBackToBattleLocation();
 
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);

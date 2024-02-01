@@ -15,6 +15,7 @@
 
 #include "Battle/Battlefield.h"
 #include "Battle/DamageDisplay.h"
+#include "AI/BattleAIController.h"
 #include "Characters/CameraPawn.h"
 #include "Characters/Hero.h"
 #include "Characters/Enemy.h"
@@ -86,6 +87,8 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
 void UBattleManager::EndPhase()
 {
     GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "End Phase");
+
+    this->playerController->GoBackToBattleLocation();
 }
 
 void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
@@ -172,7 +175,8 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
         break;
 
     case EAttackStrength::HEAVY_ATTACK_STRENGTH:
-        damage = calculateDamage(HEAVY_ATTACK_SCALING);
+        // damage = calculateDamage(HEAVY_ATTACK_SCALING);
+        damage = 999;
 
         staminaCost = 3;
         break;
@@ -210,10 +214,47 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
     this->TurnCharacter->ConsumeStamina(staminaCost);
     this->TargetCharacter->ReciveDamage(damage);
 
-    if (this->OnFinishedAttackAnim.IsBound())
+    int32 *turnCharacterStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
+
+    int32 *debugTotalStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_STAMINA);
+
+    if (!turnCharacterStamina)
     {
-        this->OnFinishedAttackAnim.Broadcast();
+        return;
     }
+
+    FString debugStamina = FString::Printf(TEXT("Current stamina: %d/%d"), *turnCharacterStamina, *debugTotalStamina);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, debugStamina);
+
+    if (this->TargetCharacter->IsDead())
+    {
+        if (*turnCharacterStamina <= 0)
+        {
+            this->EndPhase();
+        }
+        else
+        {
+            if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+            {
+                this->playerController->GoBackToBattleLocation();
+            }
+            else
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Logic of Enemy IA killed hero");
+            }
+        }
+
+        return;
+    }
+
+    if (*turnCharacterStamina <= 0)
+    {
+        this->EndPhase();
+
+        return;
+    }
+
+    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK;
 }
 
 void UBattleManager::CheckEndOfAttackTurn()
@@ -227,7 +268,7 @@ void UBattleManager::CheckEndOfAttackTurn()
 
     if (this->TargetCharacter->IsDead())
     {
-        if (*turnCharacterStamina >= 0)
+        if (*turnCharacterStamina <= 0)
         {
             if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
             {
@@ -252,10 +293,10 @@ void UBattleManager::EndOfAttackTurn()
 
 void UBattleManager::OnFinishedAttackAnimBroadcast()
 {
-    if (OnFinishedAttackAnim.IsBound())
-    {
-        OnFinishedAttackAnim.Broadcast();
-    }
+    // if (OnFinishedAttackAnim.IsBound())
+    // {
+    //     OnFinishedAttackAnim.Broadcast();
+    // }
 
     // this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK;
 }
