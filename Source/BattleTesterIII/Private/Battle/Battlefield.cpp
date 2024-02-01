@@ -114,7 +114,7 @@ void ABattlefield::MoveActorsToBattleLocations()
 
 		if (actorIAController)
 		{
-			actorIAController->MoveToBattleSpot(this);
+			actorIAController->InitialBattlePositon(this);
 		}
 	};
 

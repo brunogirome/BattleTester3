@@ -87,9 +87,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Status|Fake Data")
 	bool IsInBurnout();
 
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Status")
-	// FFakeStatus FakeStatus = FFakeStatus();
-
 	UPROPERTY(Editanywhere, BlueprintReadWrite, Category = "Status")
 	TMap<TEnumAsByte<ECombatStatus>, int32> CombatStatus;
 

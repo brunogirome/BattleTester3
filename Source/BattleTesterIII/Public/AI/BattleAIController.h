@@ -13,6 +13,8 @@ class UBattleManager;
 
 enum EAttackStrength : uint8;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReachedBattleSpotDelegate);
+
 /**
  *
  */
@@ -40,8 +42,14 @@ protected:
 	virtual void OnPossess(APawn *InPawn) override;
 
 public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FOnReachedBattleSpotDelegate OnReachedBattleSpotDelegate;
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void MoveToBattleSpot(ABattlefield *controllingBattlefieldReferance);
+	void InitialBattlePositon(ABattlefield *controllingBattlefieldReferance);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void GoToBattleSpot(bool firstExecution = false);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void MoveToSelectedTarget();
