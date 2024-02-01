@@ -77,6 +77,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Battle Control")
 	FBattleSpot battleSpot;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle Control")
+	FVector getBattleSpotLocation();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle Control")
+	ECharacterDirection getBattleSpotDirection();
 public:
 	UPROPERTY(EditAnywhere, Category = "Fake Data")
 	TEnumAsByte<ETypeOfCharacter> TypeOfCharacter = ETypeOfCharacter::ENEMY_CHRACTER;

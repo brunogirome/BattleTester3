@@ -129,6 +129,16 @@ void ACombatCharacter::BeginPlay()
   }
 }
 
+FVector ACombatCharacter::getBattleSpotLocation()
+{
+  return this->battleSpot.Location;
+}
+
+ECharacterDirection ACombatCharacter::getBattleSpotDirection()
+{
+  return this->battleSpot.Direction;
+}
+
 ACombatCharacter::ACombatCharacter()
 {
   this->DisplayTarget = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("DisplayTarget"));
