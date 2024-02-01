@@ -47,6 +47,9 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Battle")
 	ABattleAIController *GetTurnHeroAIController();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Battle")
+	void GoBackToBattleLocation();
+
 	UFUNCTION(BlueprintCallable, Category = "Battle|Select Action")
 	void IncrementOrDecrementActionIndex(FVector2D input);
 

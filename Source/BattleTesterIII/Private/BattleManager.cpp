@@ -88,15 +88,19 @@ void UBattleManager::EndPhase()
     GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "End Phase");
 }
 
-void UBattleManager::SetPlayerActionState()
+void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
 {
     if (!this->TurnCharacter && !this->springArmRef && !this->gameMode)
     {
         return;
     }
 
-    this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
+    if (!isAlreadyCameraTarget)
+    {
+        this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
+    }
 
+    // I need this delay to prevent Widget not being rendered when the player cancels target selection
     FTimerHandle widgetDelay;
     float Delay = 0.1f;
 

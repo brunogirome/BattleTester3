@@ -98,7 +98,7 @@ public:
 	FStartedBattleDelegate OnBattleStarted;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Action")
-	void SetPlayerActionState();
+	void SetPlayerActionState(bool isAlreadyCameraTarget = false);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Select Action|Widgets")
 	USelectAction *SelectActionWidget;
