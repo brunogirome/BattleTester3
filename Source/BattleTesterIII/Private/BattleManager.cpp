@@ -45,10 +45,6 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
     this->BattlefieldInstance = currentBattlefield;
     this->EnemiesRefs = this->BattlefieldInstance->Enemies;
 
-    this->characterRefs.Empty();
-    this->characterRefs.Append(*this->heroesRefs);
-    this->characterRefs.Append(this->EnemiesRefs);
-
     auto setupWidget = [&]<typename WidgetClass>(TSubclassOf<WidgetClass> widgetClass) -> WidgetClass *
     {
         WidgetClass *widget = CreateWidget<WidgetClass>(this->playerController, widgetClass);
@@ -81,14 +77,132 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
         OnBattleStarted.Broadcast();
     }
 
-    sortTurn();
+    this->startPhase(true);
 }
 
-void UBattleManager::EndPhase()
+void UBattleManager::startPhase(bool firstExecution)
 {
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "End Phase");
+    if (firstExecution || this->playedThisRound.Num() == this->characterRefs.Num())
+    {
+        this->playedThisRound.Empty();
+    }
+
+    this->sortTurnCharacters();
+
+    if (this->characterRefs.IsEmpty())
+    {
+        // TODO Error message
+
+        return;
+    }
+
+    this->TurnCharacter = characterRefs[0];
+
+    if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+    {
+        this->SetPlayerActionState();
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Enemy Logic");
+    }
+}
+
+void UBattleManager::endPhase()
+{
+    if (this->isVictory())
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future victory logic, reset the game");
+
+        return;
+    }
+
+    if (this->isGameOver())
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future game over logic, reset the game");
+
+        return;
+    }
+
+    this->playedThisRound.Add(this->TurnCharacter);
+    this->characterRefs.RemoveAt(0);
+
+    while (this->characterRefs.Num() > 0 && (this->characterRefs[0]->IsDead() || this->playedThisRound.Contains(this->characterRefs[0])))
+    {
+        this->characterRefs.RemoveAt(0);
+    }
+
+    for (auto i = this->playedThisRound.CreateIterator(); i; ++i)
+    {
+        ACombatCharacter *character = *i;
+
+        if (character && character->IsDead())
+        {
+            i.RemoveCurrent();
+        }
+    }
 
     this->playerController->GoBackToBattleLocation();
+    this->startPhase();
+}
+
+void UBattleManager::sortTurnCharacters()
+{
+    this->characterRefs.Empty();
+    this->characterRefs.Append(*heroesRefs);
+    this->characterRefs.Append(EnemiesRefs);
+
+    this->characterRefs.RemoveAll([&](ACombatCharacter *character)
+                                  { return this->playedThisRound.Contains(character) || character->IsDead(); });
+
+    this->characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
+                             {
+        const int32* speedA = a.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
+        const int32* speedB = b.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
+        const int32* staminaTotalA = a.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_STAMINA);
+        const int32* staminaTotalB = b.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_STAMINA);
+
+        if (speedA && speedB)
+        {
+            if (*speedA == *speedB)
+            {
+                if (a.TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER && b.TypeOfCharacter != ETypeOfCharacter::HERO_CHRACTER)
+                {
+                    return true;
+                }
+                else if (b.TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER && a.TypeOfCharacter != ETypeOfCharacter::HERO_CHRACTER)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (staminaTotalA && staminaTotalB)
+                    {
+                        return *staminaTotalA > *staminaTotalB;
+                    }
+                    else if (staminaTotalA)
+                    {
+                        return true;
+                    }
+                    else if (staminaTotalB)
+                    {
+                        return false;
+                    }
+
+                    return &a < &b;
+                }
+            }
+            return *speedA > *speedB;
+        }
+        else if (speedA)
+        {
+            return true;
+        }
+        else if (speedB)
+        {
+            return false;
+        }
+        return false; });
 }
 
 void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
@@ -171,14 +285,16 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
     case EAttackStrength::MEDIUM_ATTACK_STRENGTH:
         damage = calculateDamage(MEDIUM_ATTACK_SCALING);
 
-        staminaCost = 2;
+        // staminaCost = 2;
+        staminaCost = 999;
         break;
 
     case EAttackStrength::HEAVY_ATTACK_STRENGTH:
         // damage = calculateDamage(HEAVY_ATTACK_SCALING);
         damage = 999;
 
-        staminaCost = 3;
+        // staminaCost = 3;
+        staminaCost = 0;
         break;
     default:
         break;
@@ -230,10 +346,17 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
     {
         if (*turnCharacterStamina <= 0)
         {
-            this->EndPhase();
+            this->endPhase();
         }
         else
         {
+            if (this->isVictory() || this->isGameOver())
+            {
+                this->endPhase();
+
+                return;
+            }
+
             if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
             {
                 this->playerController->GoBackToBattleLocation();
@@ -249,7 +372,7 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 
     if (*turnCharacterStamina <= 0)
     {
-        this->EndPhase();
+        this->endPhase();
 
         return;
     }
@@ -259,46 +382,38 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 
 void UBattleManager::CheckEndOfAttackTurn()
 {
-    int32 *turnCharacterStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
+    // int32 *turnCharacterStamina = this->TurnCharacter->CombatStatus.Find(ECombatStatus::COMBAT_STATUS_CURRENT_STAMINA);
 
-    if (!turnCharacterStamina)
-    {
-        return;
-    }
+    // if (!turnCharacterStamina)
+    // {
+    //     return;
+    // }
 
-    if (this->TargetCharacter->IsDead())
-    {
-        if (*turnCharacterStamina <= 0)
-        {
-            if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
-            {
-                this->SetPlayerActionState();
-            }
-            else
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Enemy IA Check Attack Turn");
-            }
-        }
-    }
+    // if (this->TargetCharacter->IsDead())
+    // {
+    //     if (*turnCharacterStamina <= 0)
+    //     {
+    //         if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+    //         {
+    //             this->SetPlayerActionState();
+    //         }
+    //         else
+    //         {
+    //             GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Enemy IA Check Attack Turn");
+    //         }
+    //     }
+    // }
 
-    if (*turnCharacterStamina <= 0)
-    {
-        this->EndPhase();
-    }
+    // if (*turnCharacterStamina <= 0)
+    // {
+    //     this->endPhase();
+    // }
+
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Calling CheckEndOfAttackTurn");
 }
 
 void UBattleManager::EndOfAttackTurn()
 {
-}
-
-void UBattleManager::OnFinishedAttackAnimBroadcast()
-{
-    // if (OnFinishedAttackAnim.IsBound())
-    // {
-    //     OnFinishedAttackAnim.Broadcast();
-    // }
-
-    // this->BattleState = EBattleState::BATTLE_STATE_PLAYER_SELECT_ATTACK;
 }
 
 void UBattleManager::OnFrontOfOponentBroadcast()
@@ -424,61 +539,6 @@ void UBattleManager::setWidgetLocationOnScreen(UUserWidget *widget, float x, flo
     widget->SetPositionInViewport(SelectActionLocation, true);
 }
 
-void UBattleManager::sortTurn()
-{
-    this->characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
-                             {
-        const int32* speedA = a.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
-        const int32* speedB = b.CombatStatus.Find(ECombatStatus::COMBAT_STATUS_SPEED);
-
-        if (speedA && speedB)
-        {
-            return *speedA > *speedB;
-        }
-        else if (speedA)
-        {
-            return true;
-        }
-        else if (speedB)
-        {
-            return false;
-        }
-        return false; });
-
-    for (ACombatCharacter *character : this->characterRefs)
-    {
-        if (!character->IsDead())
-        {
-            this->TurnCharacter = character;
-            break;
-        }
-    }
-
-    if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
-    {
-        this->SetPlayerActionState();
-    }
-    else
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TurnCharacter->GetName());
-    }
-}
-
-uint8 UBattleManager::aliveEnemies()
-{
-    uint8 aliveEnemiesCount = 0;
-
-    for (AEnemy *enemy : this->EnemiesRefs)
-    {
-        if (!enemy->IsDead())
-        {
-            aliveEnemiesCount++;
-        }
-    }
-
-    return aliveEnemiesCount;
-}
-
 bool UBattleManager::isGameOver()
 {
     for (AHero *hero : *this->heroesRefs)
@@ -494,7 +554,16 @@ bool UBattleManager::isGameOver()
 
 bool UBattleManager::isVictory()
 {
-    return this->aliveEnemies() == 0;
+
+    for (AEnemy *enemy : this->EnemiesRefs)
+    {
+        if (!enemy->IsDead())
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 UBattleManager::UBattleManager()

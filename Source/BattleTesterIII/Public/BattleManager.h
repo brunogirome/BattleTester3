@@ -31,8 +31,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartedBattleDelegate);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFrontOfOponentDelegate);
 
-// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinishedAttackAnimDelegate);
-
 /**
  *
  */
@@ -45,6 +43,8 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	TArray<ACombatCharacter *> characterRefs;
 
+	TSet<ACombatCharacter *> playedThisRound;
+
 	UPartyManager *partyManager;
 
 	AMyPlayerController *playerController;
@@ -55,15 +55,17 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	uint8 enemySelectionIndex;
 
-	uint8 aliveEnemies();
+	void startPhase(bool firstExecution = false);
 
-	void setWidgetLocationOnScreen(UUserWidget *widget, float x = 0, float y = 0, ACombatCharacter *targetCharacter = nullptr);
+	void endPhase();
 
-	void sortTurn();
+	void sortTurnCharacters();
 
 	bool isGameOver();
 
 	bool isVictory();
+
+	void setWidgetLocationOnScreen(UUserWidget *widget, float x = 0, float y = 0, ACombatCharacter *targetCharacter = nullptr);
 
 	void delayedActionSelectionWidgetSettings();
 
@@ -72,9 +74,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void Start(ABattlefield *currentBattlefield);
-
-	UFUNCTION(BlueprintCallable, Category = "State Management")
-	void EndPhase();
 
 	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
 	TEnumAsByte<EBattleState> BattleState;
@@ -138,12 +137,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void EndOfAttackTurn();
-
-	// UPROPERTY(BlueprintAssignable, Category = "Attack|Event")
-	// FOnFinishedAttackAnimDelegate OnFinishedAttackAnim;
-
-	UFUNCTION(BlueprintCallable, Category = "Attack|Event")
-	void OnFinishedAttackAnimBroadcast();
 
 	UBattleManager();
 };
