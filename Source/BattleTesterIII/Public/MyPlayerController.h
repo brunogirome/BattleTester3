@@ -29,7 +29,16 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Battle")
-	void GoBackToBattleLocation();
+	void GoBackToBattleLocation(bool isReseting = false);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Mapping|Overworld")
+	void SetOverworldController();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Mapping|Battle")
+	void SetBattleController();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Mapping|Attcking")
+	void SetAttackController();
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Overworld")

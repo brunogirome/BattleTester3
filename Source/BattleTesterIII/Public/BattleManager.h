@@ -39,6 +39,8 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 {
 	GENERATED_BODY()
 
+	bool isLastTurnChracterOutOfPosition = false;
+
 	TArray<AHero *> *heroesRefs;
 
 	TArray<ACombatCharacter *> characterRefs;
@@ -55,11 +57,9 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	uint8 enemySelectionIndex;
 
-	void startPhase(bool firstExecution = false);
-
-	void endPhase();
-
 	void sortTurnCharacters();
+
+	void manageCharacterDeath(ACombatCharacter *deadCharacter);
 
 	bool isGameOver();
 
@@ -67,13 +67,17 @@ class BATTLETESTERIII_API UBattleManager : public UObject
 
 	void setWidgetLocationOnScreen(UUserWidget *widget, float x = 0, float y = 0, ACombatCharacter *targetCharacter = nullptr);
 
-	void delayedActionSelectionWidgetSettings();
-
 public:
 	void Initialize(UPartyManager *partyManagerRef, AMyGameMode *gameModeRef);
 
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void Start(ABattlefield *currentBattlefield);
+
+	UFUNCTION(BlueprintCallable, Category = "State Management")
+	void StartPhase(bool firstExecution = false);
+
+	UFUNCTION(BlueprintCallable, Category = "State Management")
+	void EndPhase();
 
 	UPROPERTY(BlueprintReadWrite, Category = "State Management|Variable")
 	TEnumAsByte<EBattleState> BattleState;
@@ -120,7 +124,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Select Target")
 	void SelectNextEnemyTarget(FVector2D input = FVector2D(0.f, 0.f));
 
-	UPROPERTY(BlueprintAssignable, Category = "Select Target|Event")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Select Target|Event")
 	FOnFrontOfOponentDelegate OnFrontOfOponent;
 
 	UFUNCTION(BlueprintCallable, Category = "Select Target|Event")

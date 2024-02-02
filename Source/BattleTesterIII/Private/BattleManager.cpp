@@ -70,19 +70,24 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
         }
     }
 
-    if (OnBattleStarted.IsBound())
+    if (this->OnBattleStarted.IsBound())
     {
-        OnBattleStarted.Broadcast();
+        this->OnBattleStarted.Broadcast();
     }
 
-    this->startPhase(true);
+    this->StartPhase(true);
 }
 
-void UBattleManager::startPhase(bool firstExecution)
+void UBattleManager::StartPhase(bool firstExecution)
 {
     if (firstExecution || this->playedThisRound.Num() == this->characterRefs.Num())
     {
         this->playedThisRound.Empty();
+    }
+
+    if (!firstExecution && this->TurnCharacter && isLastTurnChracterOutOfPosition)
+    {
+        this->playerController->GoBackToBattleLocation(false);
     }
 
     this->sortTurnCharacters();
@@ -90,7 +95,6 @@ void UBattleManager::startPhase(bool firstExecution)
     if (this->characterRefs.IsEmpty())
     {
         // TODO Error message
-
         return;
     }
 
@@ -103,10 +107,12 @@ void UBattleManager::startPhase(bool firstExecution)
     else
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Enemy Logic");
+
+        this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
     }
 }
 
-void UBattleManager::endPhase()
+void UBattleManager::EndPhase()
 {
     if (this->isVictory())
     {
@@ -125,23 +131,22 @@ void UBattleManager::endPhase()
     this->playedThisRound.Add(this->TurnCharacter);
     this->characterRefs.RemoveAt(0);
 
-    while (this->characterRefs.Num() > 0 && (this->characterRefs[0]->IsDead() || this->playedThisRound.Contains(this->characterRefs[0])))
-    {
-        this->characterRefs.RemoveAt(0);
-    }
+    // while (this->characterRefs.Num() > 0 && (this->characterRefs[0]->IsDead() || this->playedThisRound.Contains(this->characterRefs[0])))
+    // {
+    //     this->characterRefs.RemoveAt(0);
+    // }
 
-    for (auto i = this->playedThisRound.CreateIterator(); i; ++i)
-    {
-        ACombatCharacter *character = *i;
+    // for (auto i = this->playedThisRound.CreateIterator(); i; ++i)
+    // {
+    //     ACombatCharacter *character = *i;
 
-        if (character && character->IsDead())
-        {
-            i.RemoveCurrent();
-        }
-    }
+    //     if (character && character->IsDead())
+    //     {
+    //         i.RemoveCurrent();
+    //     }
+    // }
 
-    this->playerController->GoBackToBattleLocation();
-    this->startPhase();
+    this->StartPhase();
 }
 
 void UBattleManager::sortTurnCharacters()
@@ -203,6 +208,15 @@ void UBattleManager::sortTurnCharacters()
         return false; });
 }
 
+void UBattleManager::manageCharacterDeath(ACombatCharacter *deadCharacter)
+{
+    if (deadCharacter)
+    {
+        this->characterRefs.Remove(deadCharacter);
+        this->playedThisRound.Remove(deadCharacter);
+    }
+}
+
 void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
 {
     if (!this->TurnCharacter && !this->springArmRef && !this->gameMode)
@@ -219,16 +233,17 @@ void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
     FTimerHandle widgetDelay;
     float Delay = 0.1f;
 
-    this->gameMode->GetWorld()->GetTimerManager().SetTimer(widgetDelay, this, &UBattleManager::delayedActionSelectionWidgetSettings, Delay);
-}
+    this->gameMode->GetWorld()->GetTimerManager().SetTimer(
+        widgetDelay, [&]()
+        {
+        this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
 
-void UBattleManager::delayedActionSelectionWidgetSettings()
-{
-    this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
+        this->SelectActionWidget->IncrementOrDecrementAction();
+        this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
+        this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT; },
+        Delay, false);
 
-    this->SelectActionWidget->IncrementOrDecrementAction();
-    this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
-    this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
+    this->playerController->SetBattleController();
 }
 
 FVector UBattleManager::SetAttackLocation()
@@ -237,8 +252,8 @@ FVector UBattleManager::SetAttackLocation()
     targetLocation.X -= 70.f;
     targetLocation.Y += 50.f;
 
+    this->isLastTurnChracterOutOfPosition = true;
     this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
-
     this->TargetCharacter->RemoveCursor();
     this->TurnCharacter->SetAsCameraFocus(this->springArmRef);
 
@@ -341,27 +356,29 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 
     if (this->TargetCharacter->IsDead())
     {
+        if (this->isVictory() || this->isGameOver())
+        {
+            this->EndPhase();
+
+            return;
+        }
+
+        this->manageCharacterDeath(this->TargetCharacter);
+
         if (*turnCharacterStamina <= 0)
         {
-            this->endPhase();
+            this->EndPhase();
+
+            return;
+        }
+
+        if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
+        {
+            this->playerController->GoBackToBattleLocation(true);
         }
         else
         {
-            if (this->isVictory() || this->isGameOver())
-            {
-                this->endPhase();
-
-                return;
-            }
-
-            if (this->TurnCharacter->TypeOfCharacter == ETypeOfCharacter::HERO_CHRACTER)
-            {
-                this->playerController->GoBackToBattleLocation();
-            }
-            else
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Logic of Enemy IA killed hero");
-            }
+            GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Logic of Enemy IA killed hero");
         }
 
         return;
@@ -369,7 +386,7 @@ void UBattleManager::CalculatePhysicialDamage(EAttackStrength attackStrength)
 
     if (*turnCharacterStamina <= 0)
     {
-        this->endPhase();
+        this->EndPhase();
 
         return;
     }
