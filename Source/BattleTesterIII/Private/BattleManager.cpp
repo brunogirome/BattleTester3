@@ -80,7 +80,7 @@ void UBattleManager::Start(ABattlefield *currentBattlefield)
 
 void UBattleManager::StartPhase(bool firstExecution)
 {
-    if (firstExecution || this->playedThisRound.Num() == this->characterRefs.Num())
+    if (firstExecution || this->characterRefs.IsEmpty())
     {
         this->playedThisRound.Empty();
     }
@@ -107,6 +107,8 @@ void UBattleManager::StartPhase(bool firstExecution)
     else
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Future Enemy Logic");
+
+        this->EndPhase();
 
         this->BattleState = EBattleState::BATTLE_STATE_WAIT_ACTION;
     }
@@ -154,9 +156,6 @@ void UBattleManager::sortTurnCharacters()
     this->characterRefs.Empty();
     this->characterRefs.Append(*heroesRefs);
     this->characterRefs.Append(EnemiesRefs);
-
-    this->characterRefs.RemoveAll([&](ACombatCharacter *character)
-                                  { return this->playedThisRound.Contains(character) || character->IsDead(); });
 
     this->characterRefs.Sort([](const ACombatCharacter &a, const ACombatCharacter &b)
                              {
@@ -206,6 +205,9 @@ void UBattleManager::sortTurnCharacters()
             return false;
         }
         return false; });
+
+    this->characterRefs.RemoveAll([&](ACombatCharacter *character)
+                                  { return this->playedThisRound.Contains(character) || character->IsDead(); });
 }
 
 void UBattleManager::manageCharacterDeath(ACombatCharacter *deadCharacter)
@@ -236,14 +238,14 @@ void UBattleManager::SetPlayerActionState(bool isAlreadyCameraTarget)
     this->gameMode->GetWorld()->GetTimerManager().SetTimer(
         widgetDelay, [&]()
         {
-        this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
+            this->setWidgetLocationOnScreen(this->SelectActionWidget, 70.f, -45.f);
 
-        this->SelectActionWidget->IncrementOrDecrementAction();
-        this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
-        this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT; },
+            this->SelectActionWidget->IncrementOrDecrementAction();
+            this->SelectActionWidget->SetVisibility(ESlateVisibility::Visible);
+            this->BattleState = EBattleState::BATTLE_STATE_PLAYER_ACTION_SELECT;
+
+            this->playerController->SetBattleController(); },
         Delay, false);
-
-    this->playerController->SetBattleController();
 }
 
 FVector UBattleManager::SetAttackLocation()
