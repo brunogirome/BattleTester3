@@ -19,7 +19,7 @@ DECLARE_DELEGATE(FOnGameSpawnedHeroes);
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class BATTLETESTERIII_API UPartyManager : public UObject
 {
 	GENERATED_BODY()
@@ -44,4 +44,6 @@ public:
 	void SpawnParty(FVector startLocation = FVector(0, 0, 0), FRotator startRotation = FRotator(0, 0, 0));
 
 	void Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *gameModeRef);
+
+	UPartyManager();
 };

@@ -95,3 +95,7 @@ void UPartyManager::Initialize(UMyGameInstance *gameInstanceRef, AMyGameMode *ga
   this->gameInstance = gameInstanceRef;
   this->playerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }
+
+UPartyManager::UPartyManager()
+{
+}
